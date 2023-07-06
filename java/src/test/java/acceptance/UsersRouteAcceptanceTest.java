@@ -18,13 +18,13 @@ public class UsersRouteAcceptanceTest {
     @Test
     void retrieveEmptyUserListWithNoRegisteredUser() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(5))
-                .build();
+            .connectTimeout(Duration.ofSeconds(5))
+            .build();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create("http://localhost:8000/users"))
-                .build();
+            .GET()
+            .uri(URI.create("http://localhost:8000/users"))
+            .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -32,17 +32,18 @@ public class UsersRouteAcceptanceTest {
         assertEquals("[]", response.body());
     }
 
-    @Disabled("WIP")
     @Test
     void registerUser() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(5))
-                .build();
+            .connectTimeout(Duration.ofSeconds(5))
+            .build();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString("{\"username\":\"pippo\", \"password\":\"pluto123\", \"about\":\"intro a pippo\"}"))
-                .uri(URI.create("http://localhost:8000/users"))
-                .build();
+            .POST(HttpRequest.BodyPublishers.ofString(
+                "{\"username\":\"pippo\", \"password\":\"pluto123\", \"about\":\"intro a pippo\"}"
+            ))
+            .uri(URI.create("http://localhost:8000/users"))
+            .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
