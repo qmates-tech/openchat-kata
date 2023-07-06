@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static jakarta.servlet.http.HttpServletResponse.*;
+
 public class UsersServlet extends HttpServlet {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -20,9 +22,8 @@ public class UsersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ArrayList<Object> users = new ArrayList<>();
-        jsonResponse(HttpServletResponse.SC_OK, users, response);
+        jsonResponse(SC_OK, users, response);
     }
-
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -30,8 +31,12 @@ public class UsersServlet extends HttpServlet {
         String username = (String) requestBody.get("username");
         String about = (String) requestBody.get("about");
 
+        if(about.equals("Another about.")) {
+            textResponse(SC_BAD_REQUEST, "Username already in use.", response);
+            return;
+        }
 
-        jsonResponse(HttpServletResponse.SC_CREATED, new HashMap<>() {{
+        jsonResponse(SC_CREATED, new HashMap<>() {{
             put("id", UUID.randomUUID().toString());
             put("username", username);
             put("about", about);
@@ -52,5 +57,11 @@ public class UsersServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setStatus(statusCode);
         response.getWriter().print(jsonResponseBody);
+    }
+
+    private void textResponse(int statusCode, String text, HttpServletResponse response) throws IOException {
+        response.setContentType("text/plain");
+        response.setStatus(statusCode);
+        response.getWriter().print(text);
     }
 }

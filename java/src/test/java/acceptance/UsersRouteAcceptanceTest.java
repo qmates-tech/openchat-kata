@@ -55,7 +55,6 @@ public class UsersRouteAcceptanceTest {
         assertDoesNotThrow(() -> UUID.fromString((String) responseBody.get("id")));
     }
 
-    @Disabled("WIP")
     @Test
     void usernameAlreadyExist() throws IOException, InterruptedException {
         HttpResponse<String> response = send(requestBuilderFor("/users")
@@ -72,7 +71,6 @@ public class UsersRouteAcceptanceTest {
                 put("password", "cinesca123");
                 put("about", "Another about.");
             }})).build());
-
         assertEquals(400, response.statusCode());
         assertEquals("Username already in use.", response.body());
     }
