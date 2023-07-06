@@ -3,6 +3,7 @@ package acceptance;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -53,6 +54,29 @@ public class UsersRouteAcceptanceTest {
         assertEquals("About pippo user.", responseBody.get("about"));
         assertDoesNotThrow(() -> UUID.fromString((String) responseBody.get("id")));
     }
+
+    @Disabled("WIP")
+    @Test
+    void usernameAlreadyExist() throws IOException, InterruptedException {
+        HttpResponse<String> response = send(requestBuilderFor("/users")
+            .POST(bodyFor(new HashMap<>() {{
+                put("username", "pippo");
+                put("password", "pluto123");
+                put("about", "About pippo user.");
+            }})).build());
+        assertEquals(201, response.statusCode());
+
+        response = send(requestBuilderFor("/users")
+            .POST(bodyFor(new HashMap<>() {{
+                put("username", "pippo");
+                put("password", "cinesca123");
+                put("about", "Another about.");
+            }})).build());
+
+        assertEquals(400, response.statusCode());
+        assertEquals("Username already in use.", response.body());
+    }
+
 
     private HttpRequest.BodyPublisher bodyFor(Object requestBody) throws JsonProcessingException {
         return HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(requestBody));
