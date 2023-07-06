@@ -1,5 +1,6 @@
 package acceptance;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -36,11 +37,12 @@ public class UsersRouteAcceptanceTest {
 
     @Test
     void registerUser() throws IOException, InterruptedException {
-        HttpRequest request = requestBuilderFor("/users").POST(
-                HttpRequest.BodyPublishers.ofString(
-                    "{\"username\":\"pippo\", \"password\":\"pluto123\", \"about\":\"About pippo user.\"}"
-                )
-            )
+        HttpRequest request = requestBuilderFor("/users")
+            .POST(bodyFor(new HashMap<>() {{
+                put("username", "pippo");
+                put("password", "pluto123");
+                put("about", "About pippo user.");
+            }}))
             .build();
 
         HttpResponse<String> response = send(request);
@@ -50,6 +52,10 @@ public class UsersRouteAcceptanceTest {
         assertEquals("pippo", responseBody.get("username"));
         assertEquals("About pippo user.", responseBody.get("about"));
         assertDoesNotThrow(() -> UUID.fromString((String) responseBody.get("id")));
+    }
+
+    private HttpRequest.BodyPublisher bodyFor(Object requestBody) throws JsonProcessingException {
+        return HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(requestBody));
     }
 
     private static HttpRequest.Builder requestBuilderFor(String route) {
