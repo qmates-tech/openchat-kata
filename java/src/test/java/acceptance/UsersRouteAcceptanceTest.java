@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UsersRouteAcceptanceTest {
 
-    @Disabled("WIP")
     @Test
     void retrieveEmptyUserListWithNoRegisteredUser() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newBuilder()
