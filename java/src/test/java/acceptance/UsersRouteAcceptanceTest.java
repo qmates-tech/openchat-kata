@@ -20,19 +20,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class UsersRouteAcceptanceTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final HttpClient httpClient = HttpClient.newBuilder()
+        .connectTimeout(Duration.ofSeconds(5))
+        .build();
 
     @Test
     void retrieveEmptyUserListWithNoRegisteredUser() throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(5))
-            .build();
+        HttpRequest request = requestBuilderFor("/users").GET().build();
 
-        HttpRequest request = HttpRequest.newBuilder()
-            .GET()
-            .uri(URI.create("http://localhost:8000/users"))
-            .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = send(request);
 
         assertEquals(200, response.statusCode());
         assertEquals("[]", response.body());
@@ -40,24 +36,28 @@ public class UsersRouteAcceptanceTest {
 
     @Test
     void registerUser() throws IOException, InterruptedException {
-        HttpClient client = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(5))
+        HttpRequest request = requestBuilderFor("/users").POST(
+                HttpRequest.BodyPublishers.ofString(
+                    "{\"username\":\"pippo\", \"password\":\"pluto123\", \"about\":\"About pippo user.\"}"
+                )
+            )
             .build();
 
-        HttpRequest request = HttpRequest.newBuilder()
-            .POST(HttpRequest.BodyPublishers.ofString(
-                "{\"username\":\"pippo\", \"password\":\"pluto123\", \"about\":\"About pippo user.\"}"
-            ))
-            .uri(URI.create("http://localhost:8000/users"))
-            .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = send(request);
 
         assertEquals(201, response.statusCode());
         Map<String, Object> responseBody = stringJsonToMap(response.body());
         assertEquals("pippo", responseBody.get("username"));
         assertEquals("About pippo user.", responseBody.get("about"));
         assertDoesNotThrow(() -> UUID.fromString((String) responseBody.get("id")));
+    }
+
+    private static HttpRequest.Builder requestBuilderFor(String route) {
+        return HttpRequest.newBuilder().uri(URI.create("http://localhost:8000" + route));
+    }
+
+    private HttpResponse<String> send(HttpRequest request) throws IOException, InterruptedException {
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
     private Map<String, Object> stringJsonToMap(String body) throws IOException {
