@@ -6,6 +6,7 @@ import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.eclipse.jetty.http.MimeTypes;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,13 +55,13 @@ public class UsersServlet extends HttpServlet {
         HttpServletResponse response
     ) throws IOException {
         String jsonResponseBody = objectMapper.writeValueAsString(responseBody);
-        response.setContentType("application/json");
+        response.setContentType(MimeTypes.Type.APPLICATION_JSON.toString());
         response.setStatus(statusCode);
         response.getWriter().print(jsonResponseBody);
     }
 
     private void textResponse(int statusCode, String text, HttpServletResponse response) throws IOException {
-        response.setContentType("text/plain");
+        response.setContentType(MimeTypes.Type.TEXT_PLAIN_UTF_8.toString());
         response.setStatus(statusCode);
         response.getWriter().print(text);
     }

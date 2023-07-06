@@ -33,6 +33,7 @@ public class UsersRouteAcceptanceTest {
         HttpResponse<String> response = send(request);
 
         assertEquals(200, response.statusCode());
+        assertEquals("application/json", response.headers().firstValue("Content-Type").get());
         assertEquals("[]", response.body());
     }
 
@@ -49,6 +50,7 @@ public class UsersRouteAcceptanceTest {
         HttpResponse<String> response = send(request);
 
         assertEquals(201, response.statusCode());
+        assertEquals("application/json", response.headers().firstValue("Content-Type").get());
         Map<String, Object> responseBody = stringJsonToMap(response.body());
         assertEquals("pippo", responseBody.get("username"));
         assertEquals("About pippo user.", responseBody.get("about"));
@@ -72,6 +74,7 @@ public class UsersRouteAcceptanceTest {
                 put("about", "Another about.");
             }})).build());
         assertEquals(400, response.statusCode());
+        assertEquals("text/plain;charset=utf-8", response.headers().firstValue("Content-Type").get());
         assertEquals("Username already in use.", response.body());
     }
 
