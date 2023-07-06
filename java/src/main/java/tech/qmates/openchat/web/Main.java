@@ -1,6 +1,8 @@
+package tech.qmates.openchat.web;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
-import web.servlets.UsersServlet;
+import tech.qmates.openchat.web.servlets.UsersServlet;
 
 public class Main {
 

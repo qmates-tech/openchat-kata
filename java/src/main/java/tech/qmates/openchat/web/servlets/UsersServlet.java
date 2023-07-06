@@ -1,4 +1,4 @@
-package web.servlets;
+package tech.qmates.openchat.web.servlets;
 
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
