@@ -3,7 +3,6 @@ package acceptance;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -59,23 +58,23 @@ public class UsersRouteAcceptanceTest {
 
     @Test
     void usernameAlreadyExist() throws IOException, InterruptedException {
-        HttpResponse<String> response = send(requestBuilderFor("/users")
+        HttpResponse<String> firstRegistrationResponse = send(requestBuilderFor("/users")
             .POST(bodyFor(new HashMap<>() {{
                 put("username", "pippo");
                 put("password", "pluto123");
                 put("about", "About pippo user.");
             }})).build());
-        assertEquals(201, response.statusCode());
+        assertEquals(201, firstRegistrationResponse.statusCode());
 
-        response = send(requestBuilderFor("/users")
+        HttpResponse<String> secondAttemptResponse = send(requestBuilderFor("/users")
             .POST(bodyFor(new HashMap<>() {{
                 put("username", "pippo");
                 put("password", "cinesca123");
                 put("about", "Another about.");
             }})).build());
-        assertEquals(400, response.statusCode());
-        assertEquals("text/plain;charset=utf-8", response.headers().firstValue("Content-Type").get());
-        assertEquals("Username already in use.", response.body());
+        assertEquals(400, secondAttemptResponse.statusCode());
+        assertEquals("text/plain;charset=utf-8", secondAttemptResponse.headers().firstValue("Content-Type").get());
+        assertEquals("Username already in use.", secondAttemptResponse.body());
     }
 
 
