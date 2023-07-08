@@ -5,8 +5,9 @@ import tech.qmates.openchat.domain.entity.User;
 import tech.qmates.openchat.domain.repository.UserRepository;
 import tech.qmates.openchat.domain.usecase.RegisterUserUseCase.UsernameAlreadyInUseException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class RegisterUserUseCaseTest {
@@ -17,8 +18,13 @@ class RegisterUserUseCaseTest {
     @Test
     void storeUser() throws UsernameAlreadyInUseException {
         when(userRepository.isUsernameAlreadyUsed("pippo")).thenReturn(false);
-        usecase.run("pippo", "about pippo", "password");
-        verify(userRepository, times(1)).store(new User("pippo", "about pippo", "password"));
+        usecase.run("pippo", "password", "about pippo");
+        verify(userRepository, times(1)).store(assertArg(user -> {
+            assertNotNull(user.uuid());
+            assertEquals("pippo", user.username());
+            assertEquals("password", user.password());
+            assertEquals("about pippo", user.about());
+        }));
     }
 
     @Test

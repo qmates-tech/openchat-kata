@@ -88,10 +88,12 @@ public class UsersRouteAcceptanceTest {
         List<Map<String, Object>> retrieveUsersResponseBody = stringJsonArrayToList(retrieveUsersResponse.body());
         assertEquals(2, retrieveUsersResponseBody.size());
         assertThat(retrieveUsersResponseBody).anySatisfy(userMap -> {
+            assertEquals(aliceUUID, userMap.get("id"));
             assertEquals("alice90", userMap.get("username"));
             assertEquals("About alice user.", userMap.get("about"));
         });
         assertThat(retrieveUsersResponseBody).anySatisfy(userMap -> {
+            assertEquals(johnUUID, userMap.get("id"));
             assertEquals("john91", userMap.get("username"));
             assertEquals("About john user.", userMap.get("about"));
         });

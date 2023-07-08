@@ -28,7 +28,7 @@ public class UsersServlet extends HttpServlet {
         List<User> users = usecase.run();
         List<HashMap<String, Object>> listOfMapUsers = users.stream()
             .map(user -> new HashMap<String, Object>() {{
-                put("id", "TODO");
+                put("id", user.uuid().toString());
                 put("username", user.username());
                 put("about", user.about());
             }})
@@ -45,10 +45,10 @@ public class UsersServlet extends HttpServlet {
 
         try {
             RegisterUserUseCase usecase = new RegisterUserUseCase(AppFactory.getUserRepository());
-            usecase.run(username, password, about);
+            UUID storedUserUUID = usecase.run(username, password, about);
 
             jsonResponse(SC_CREATED, new HashMap<>() {{
-                put("id", UUID.randomUUID().toString());
+                put("id", storedUserUUID.toString());
                 put("username", username);
                 put("about", about);
             }}, response);
