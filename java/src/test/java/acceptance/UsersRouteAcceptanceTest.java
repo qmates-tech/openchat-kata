@@ -40,9 +40,9 @@ public class UsersRouteAcceptanceTest {
     void registerUser() throws IOException, InterruptedException {
         HttpRequest request = requestBuilderFor("/users")
             .POST(bodyFor(new HashMap<>() {{
-                put("username", "pippo");
-                put("password", "pluto123");
-                put("about", "About pippo user.");
+                put("username", "alice90");
+                put("password", "pass1234");
+                put("about", "About alice user.");
             }}))
             .build();
 
@@ -51,8 +51,8 @@ public class UsersRouteAcceptanceTest {
         assertEquals(201, response.statusCode());
         assertEquals("application/json", response.headers().firstValue("Content-Type").get());
         Map<String, Object> responseBody = stringJsonToMap(response.body());
-        assertEquals("pippo", responseBody.get("username"));
-        assertEquals("About pippo user.", responseBody.get("about"));
+        assertEquals("alice90", responseBody.get("username"));
+        assertEquals("About alice user.", responseBody.get("about"));
         assertDoesNotThrow(() -> UUID.fromString((String) responseBody.get("id")));
     }
 
@@ -60,16 +60,16 @@ public class UsersRouteAcceptanceTest {
     void usernameAlreadyExist() throws IOException, InterruptedException {
         HttpResponse<String> firstRegistrationResponse = send(requestBuilderFor("/users")
             .POST(bodyFor(new HashMap<>() {{
-                put("username", "pippo");
-                put("password", "pluto123");
-                put("about", "About pippo user.");
+                put("username", "bob89");
+                put("password", "123pass");
+                put("about", "About bob user.");
             }})).build());
         assertEquals(201, firstRegistrationResponse.statusCode());
 
         HttpResponse<String> secondAttemptResponse = send(requestBuilderFor("/users")
             .POST(bodyFor(new HashMap<>() {{
-                put("username", "pippo");
-                put("password", "cinesca123");
+                put("username", "bob89");
+                put("password", "pass123");
                 put("about", "Another about.");
             }})).build());
         assertEquals(400, secondAttemptResponse.statusCode());
