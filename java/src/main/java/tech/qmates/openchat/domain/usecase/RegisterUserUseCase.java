@@ -3,11 +3,11 @@ package tech.qmates.openchat.domain.usecase;
 import tech.qmates.openchat.domain.entity.User;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
-public class RegisterUserUsecase {
+public class RegisterUserUseCase {
 
     private final UserRepository userRepository;
 
-    public RegisterUserUsecase(UserRepository userRepository) {
+    public RegisterUserUseCase(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

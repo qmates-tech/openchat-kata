@@ -3,16 +3,16 @@ package tech.qmates.openchat.domain.usecase;
 import org.junit.jupiter.api.Test;
 import tech.qmates.openchat.domain.entity.User;
 import tech.qmates.openchat.domain.repository.UserRepository;
-import tech.qmates.openchat.domain.usecase.RegisterUserUsecase.UsernameAlreadyInUseException;
+import tech.qmates.openchat.domain.usecase.RegisterUserUseCase.UsernameAlreadyInUseException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-class RegisterUserUsecaseTest {
+class RegisterUserUseCaseTest {
 
     private final UserRepository userRepository = mock(UserRepository.class);
-    private final RegisterUserUsecase usecase = new RegisterUserUsecase(userRepository);
+    private final RegisterUserUseCase usecase = new RegisterUserUseCase(userRepository);
 
     @Test
     void storeUser() throws UsernameAlreadyInUseException {

@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.MimeTypes;
-import tech.qmates.openchat.domain.usecase.RegisterUserUsecase;
+import tech.qmates.openchat.domain.usecase.RegisterUserUseCase;
 import tech.qmates.openchat.web.AppFactory;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class UsersServlet extends HttpServlet {
         try {
             String username = (String) requestBody.get("username");
             String about = (String) requestBody.get("about");
-            RegisterUserUsecase usecase = new RegisterUserUsecase(AppFactory.getUserRepository());
+            RegisterUserUseCase usecase = new RegisterUserUseCase(AppFactory.getUserRepository());
             usecase.run(username);
 
             jsonResponse(SC_CREATED, new HashMap<>() {{
@@ -43,7 +43,7 @@ public class UsersServlet extends HttpServlet {
                 put("username", username);
                 put("about", about);
             }}, response);
-        } catch (RegisterUserUsecase.UsernameAlreadyInUseException e) {
+        } catch (RegisterUserUseCase.UsernameAlreadyInUseException e) {
             textResponse(SC_BAD_REQUEST, "Username already in use.", response);
         }
     }
