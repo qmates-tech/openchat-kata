@@ -11,11 +11,12 @@ public class RegisterUserUseCase {
         this.userRepository = userRepository;
     }
 
-    public void run(String username) throws UsernameAlreadyInUseException {
+    public void run(String username, String password, String about) throws UsernameAlreadyInUseException {
         if(userRepository.isUsernameAlreadyUsed(username))
             throw new UsernameAlreadyInUseException(username);
 
-        this.userRepository.store(new User(username));
+        User userToBeStored = new User(username, password, about);
+        this.userRepository.store(userToBeStored);
     }
 
     public static class UsernameAlreadyInUseException extends Exception {

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -67,14 +68,14 @@ public class UsersRouteAcceptanceTest {
 
         response = send(requestBuilderFor("/users")
             .POST(bodyFor(new HashMap<>() {{
-                put("username", "bob88");
-                put("password", "pass1234");
-                put("about", "About alice user.");
+                put("username", "john91");
+                put("password", "pass4321");
+                put("about", "About john user.");
             }})).build()
         );
         assertEquals(201, response.statusCode());
         responseBody = stringJsonToMap(response.body());
-        String bobUUID = (String) responseBody.get("id");
+        String johnUUID = (String) responseBody.get("id");
 
         // ========================================= retrieve registered users
 
@@ -86,6 +87,14 @@ public class UsersRouteAcceptanceTest {
         assertEquals("application/json", retrieveUsersResponse.headers().firstValue("Content-Type").get());
         List<Map<String, Object>> retrieveUsersResponseBody = stringJsonArrayToList(retrieveUsersResponse.body());
         assertEquals(2, retrieveUsersResponseBody.size());
+        assertThat(retrieveUsersResponseBody).anySatisfy(userMap -> {
+            assertEquals("alice90", userMap.get("username"));
+            assertEquals("About alice user.", userMap.get("about"));
+        });
+        assertThat(retrieveUsersResponseBody).anySatisfy(userMap -> {
+            assertEquals("john91", userMap.get("username"));
+            assertEquals("About john user.", userMap.get("about"));
+        });
     }
 
     @Test

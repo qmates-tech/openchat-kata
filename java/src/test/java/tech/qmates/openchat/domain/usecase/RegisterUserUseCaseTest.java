@@ -17,8 +17,8 @@ class RegisterUserUseCaseTest {
     @Test
     void storeUser() throws UsernameAlreadyInUseException {
         when(userRepository.isUsernameAlreadyUsed("pippo")).thenReturn(false);
-        usecase.run("pippo");
-        verify(userRepository, times(1)).store(new User("pippo"));
+        usecase.run("pippo", "about pippo", "password");
+        verify(userRepository, times(1)).store(new User("pippo", "about pippo", "password"));
     }
 
     @Test
@@ -27,7 +27,7 @@ class RegisterUserUseCaseTest {
 
         UsernameAlreadyInUseException thrownException = assertThrows(
             UsernameAlreadyInUseException.class,
-            () -> usecase.run("pippo")
+            () -> usecase.run("pippo", "any", "any")
         );
 
         assertEquals("Username [pippo] already in use!", thrownException.getMessage());

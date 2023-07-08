@@ -30,7 +30,7 @@ public class UsersServlet extends HttpServlet {
             .map(user -> new HashMap<String, Object>() {{
                 put("id", "TODO");
                 put("username", user.username());
-                put("about", "TODO");
+                put("about", user.about());
             }})
             .collect(Collectors.toList());
         jsonResponse(SC_OK, listOfMapUsers, response);
@@ -39,12 +39,13 @@ public class UsersServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, Object> requestBody = stringJsonToMap(request.getInputStream());
+        String username = (String) requestBody.get("username");
+        String password = (String) requestBody.get("password");
+        String about = (String) requestBody.get("about");
 
         try {
-            String username = (String) requestBody.get("username");
-            String about = (String) requestBody.get("about");
             RegisterUserUseCase usecase = new RegisterUserUseCase(AppFactory.getUserRepository());
-            usecase.run(username);
+            usecase.run(username, password, about);
 
             jsonResponse(SC_CREATED, new HashMap<>() {{
                 put("id", UUID.randomUUID().toString());
