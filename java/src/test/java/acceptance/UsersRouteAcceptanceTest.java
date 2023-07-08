@@ -3,6 +3,7 @@ package acceptance;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -24,6 +25,11 @@ public class UsersRouteAcceptanceTest {
     private final HttpClient httpClient = HttpClient.newBuilder()
         .connectTimeout(Duration.ofSeconds(5))
         .build();
+
+    @BeforeEach
+    void setUp() throws IOException, InterruptedException {
+        httpClient.send(requestBuilderFor("/admin").DELETE().build(), HttpResponse.BodyHandlers.discarding());
+    }
 
     @Test
     void retrieveEmptyUserListWithNoRegisteredUser() throws IOException, InterruptedException {
