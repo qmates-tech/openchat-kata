@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.MimeTypes;
+import tech.qmates.openchat.domain.usecase.RegisterUserUsecase;
+import tech.qmates.openchat.web.AppFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,19 +31,21 @@ public class UsersServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, Object> requestBody = stringJsonToMap(request.getInputStream());
-        String username = (String) requestBody.get("username");
-        String about = (String) requestBody.get("about");
 
-        if(about.equals("Another about.")) {
+        try {
+            String username = (String) requestBody.get("username");
+            String about = (String) requestBody.get("about");
+            RegisterUserUsecase usecase = new RegisterUserUsecase(AppFactory.getUserRepository());
+            usecase.run(username);
+
+            jsonResponse(SC_CREATED, new HashMap<>() {{
+                put("id", UUID.randomUUID().toString());
+                put("username", username);
+                put("about", about);
+            }}, response);
+        } catch (RegisterUserUsecase.UsernameAlreadyInUseException e) {
             textResponse(SC_BAD_REQUEST, "Username already in use.", response);
-            return;
         }
-
-        jsonResponse(SC_CREATED, new HashMap<>() {{
-            put("id", UUID.randomUUID().toString());
-            put("username", username);
-            put("about", about);
-        }}, response);
     }
 
     private Map<String, Object> stringJsonToMap(ServletInputStream inputStream) throws IOException {

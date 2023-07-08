@@ -10,6 +10,10 @@ public class User {
         this.username = username;
     }
 
+    public String username() {
+        return this.username;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
