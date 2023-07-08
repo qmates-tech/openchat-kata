@@ -4,6 +4,7 @@ import tech.qmates.openchat.domain.entity.User;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class InMemoryUserRepository implements UserRepository {
@@ -18,5 +19,10 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public boolean isUsernameAlreadyUsed(String username) {
         return users.stream().anyMatch(user -> user.username().equals(username));
+    }
+
+    @Override
+    public List<User> getAll() {
+        return Collections.unmodifiableList(this.users);
     }
 }

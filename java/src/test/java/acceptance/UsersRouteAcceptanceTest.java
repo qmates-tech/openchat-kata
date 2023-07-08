@@ -13,6 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -43,7 +44,7 @@ public class UsersRouteAcceptanceTest {
     }
 
     @Test
-    void registerUser() throws IOException, InterruptedException {
+    void registerSomeUsersAndRetrieveThem() throws IOException, InterruptedException {
         HttpRequest request = requestBuilderFor("/users")
             .POST(bodyFor(new HashMap<>() {{
                 put("username", "alice90");
@@ -59,11 +60,36 @@ public class UsersRouteAcceptanceTest {
         Map<String, Object> responseBody = stringJsonToMap(response.body());
         assertEquals("alice90", responseBody.get("username"));
         assertEquals("About alice user.", responseBody.get("about"));
-        assertDoesNotThrow(() -> UUID.fromString((String) responseBody.get("id")));
+        String aliceUUID = (String) responseBody.get("id");
+        assertDoesNotThrow(() -> UUID.fromString(aliceUUID));
+
+        // ========================================= register another user
+
+        response = send(requestBuilderFor("/users")
+            .POST(bodyFor(new HashMap<>() {{
+                put("username", "bob88");
+                put("password", "pass1234");
+                put("about", "About alice user.");
+            }})).build()
+        );
+        assertEquals(201, response.statusCode());
+        responseBody = stringJsonToMap(response.body());
+        String bobUUID = (String) responseBody.get("id");
+
+        // ========================================= retrieve registered users
+
+        HttpRequest retrieveUsersRequest = requestBuilderFor("/users").GET().build();
+
+        HttpResponse<String> retrieveUsersResponse = send(retrieveUsersRequest);
+
+        assertEquals(200, retrieveUsersResponse.statusCode());
+        assertEquals("application/json", retrieveUsersResponse.headers().firstValue("Content-Type").get());
+        List<Map<String, Object>> retrieveUsersResponseBody = stringJsonArrayToList(retrieveUsersResponse.body());
+        assertEquals(2, retrieveUsersResponseBody.size());
     }
 
     @Test
-    void usernameAlreadyExist() throws IOException, InterruptedException {
+    void usernameAlreadyInUse() throws IOException, InterruptedException {
         HttpResponse<String> firstRegistrationResponse = send(requestBuilderFor("/users")
             .POST(bodyFor(new HashMap<>() {{
                 put("username", "bob89");
@@ -83,7 +109,6 @@ public class UsersRouteAcceptanceTest {
         assertEquals("Username already in use.", secondAttemptResponse.body());
     }
 
-
     private HttpRequest.BodyPublisher bodyFor(Object requestBody) throws JsonProcessingException {
         return HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(requestBody));
     }
@@ -96,10 +121,16 @@ public class UsersRouteAcceptanceTest {
         return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
+    //@formatter:off
     private Map<String, Object> stringJsonToMap(String body) throws IOException {
-        //@formatter:off
-        TypeReference<HashMap<String, Object>> targetType = new TypeReference<>() { };
+        TypeReference<Map<String, Object>> targetType = new TypeReference<>() { };
         return objectMapper.readValue(body, targetType);
-        //@formatter:on
     }
+
+    private List<Map<String, Object>> stringJsonArrayToList(String body) throws JsonProcessingException {
+        TypeReference<List<Map<String, Object>>> targetType = new TypeReference<>() { };
+        return objectMapper.readValue(body, targetType);
+    }
+    //@formatter:on
+
 }

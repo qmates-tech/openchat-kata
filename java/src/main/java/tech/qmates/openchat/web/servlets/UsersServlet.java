@@ -7,14 +7,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.MimeTypes;
+import tech.qmates.openchat.domain.entity.User;
+import tech.qmates.openchat.domain.usecase.GetAllUserUseCase;
 import tech.qmates.openchat.domain.usecase.RegisterUserUseCase;
 import tech.qmates.openchat.web.AppFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static jakarta.servlet.http.HttpServletResponse.*;
 
@@ -24,8 +24,16 @@ public class UsersServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ArrayList<Object> users = new ArrayList<>();
-        jsonResponse(SC_OK, users, response);
+        GetAllUserUseCase usecase = new GetAllUserUseCase(AppFactory.getUserRepository());
+        List<User> users = usecase.run();
+        List<HashMap<String, Object>> listOfMapUsers = users.stream()
+            .map(user -> new HashMap<String, Object>() {{
+                put("id", "TODO");
+                put("username", user.username());
+                put("about", "TODO");
+            }})
+            .collect(Collectors.toList());
+        jsonResponse(SC_OK, listOfMapUsers, response);
     }
 
     @Override
