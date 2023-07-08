@@ -45,8 +45,10 @@ public class UsersServlet extends HttpServlet {
     }
 
     private Map<String, Object> stringJsonToMap(ServletInputStream inputStream) throws IOException {
+        //@formatter:off
         TypeReference<HashMap<String, Object>> targetType = new TypeReference<>() { };
         return objectMapper.readValue(inputStream, targetType);
+        //@formatter:on
     }
 
     private void jsonResponse(

@@ -91,7 +91,9 @@ public class UsersRouteAcceptanceTest {
     }
 
     private Map<String, Object> stringJsonToMap(String body) throws IOException {
+        //@formatter:off
         TypeReference<HashMap<String, Object>> targetType = new TypeReference<>() { };
         return objectMapper.readValue(body, targetType);
+        //@formatter:on
     }
 }
