@@ -1,4 +1,4 @@
-# Frameworkless backend project
+# Open Chat Backend Kata in Typescript
 
 ### Run it
 
