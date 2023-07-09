@@ -1,4 +1,5 @@
 import { ServerResponse } from 'http';
+import usersRoute from './routes/users'
 
 export type ParsedRequest = {
   method: string,
@@ -7,6 +8,9 @@ export type ParsedRequest = {
 }
 
 export function handleReceivedRequest(request: ParsedRequest, response: ServerResponse) {
+  if (usersRoute.shouldHandle(request))
+    return usersRoute.handle(request, response)
+
   console.log('Route not found!')
   textResponse(404, "Route not found!", response)
 }
