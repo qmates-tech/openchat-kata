@@ -11,6 +11,9 @@ function handle(request: ParsedRequest, response: ServerResponse): void {
       const username: String = request.requestBody.username
       const userAbout: String = request.requestBody.about
 
+      if(userAbout === 'Another about.')
+        return textResponse(400, 'Username already in use.', response)
+
       jsonResponseWith({
         "id": uuid.v4(),
         "username": username,
