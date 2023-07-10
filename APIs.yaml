@@ -115,14 +115,14 @@ paths:
     get:
       tags:
         - post
-      summary: Return user's timeline.
+      summary: Return the user's timeline. The timeline contains only posts from that specific user. Posts are in reverse chronological order.
       operationId: timeline
       produces:
         - application/json
       parameters:
         - in: path
           name: userId
-          description: ID of the user creating the post.
+          description: ID of the user we want the timeline.
           required: true
           type: string
           format: UUID
@@ -182,14 +182,14 @@ paths:
     get:
       tags:
         - post
-      summary: Return user's wall.
+      summary: Return the user's wall. The wall contains posts from the user itself and post from user's followees. Posts are in reverse chronological order.
       operationId: wall
       produces:
         - application/json
       parameters:
         - in: path
           name: userId
-          description: ID of the user creating the post.
+          description: ID of the user we want the wall.
           required: true
           type: string
           format: UUID

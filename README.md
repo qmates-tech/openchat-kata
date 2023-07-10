@@ -2,7 +2,9 @@
 
 Develop a REST API for the Open Chat project following API specification in `APIs.yaml`.
 
-![](API.png)
+![](APIs.png)
+
+-> [see API specification online](https://editor.swagger.io/?url=https://raw.githubusercontent.com/qmates-tech/openchat-kata/master/APIs.yaml)
 
 
 ## About this Kata
