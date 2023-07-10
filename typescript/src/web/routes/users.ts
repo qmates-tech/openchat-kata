@@ -3,6 +3,7 @@ import RegisterUserUseCase, { UsernameAlreadyInUseError } from "../../domain/use
 import AppFactory from "../AppFactory";
 import { jsonResponseWith, ParsedRequest, textResponse } from "../router";
 import User from "../../domain/entities/User";
+import GetAllUsersUseCase from "../../domain/usecases/GetAllUsersUseCase";
 
 function handle(request: ParsedRequest, response: ServerResponse): void {
   switch (request.method) {
@@ -15,7 +16,9 @@ function handle(request: ParsedRequest, response: ServerResponse): void {
 }
 
 function getRequest(response: ServerResponse): void {
-  const users: User[] = AppFactory.getUserRepository().getAll()
+  const usecase = new GetAllUsersUseCase(AppFactory.getUserRepository())
+  const users: User[] = usecase.run()
+
   const serializedUsers = users.map((u) => {
     return {
       id: u.id,
