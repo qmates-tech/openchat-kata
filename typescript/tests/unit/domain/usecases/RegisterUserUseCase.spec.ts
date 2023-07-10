@@ -1,17 +1,22 @@
 import { mock } from 'jest-mock-extended';
 import * as uuid from 'uuid';
 import UserRepository from '../../../../src/domain/repositories/UserRepository';
-import RegisterUserUseCase from "../../../../src/domain/usecases/RegisterUserUseCase";
+import RegisterUserUseCase, { UsernameAlreadyInUseError } from "../../../../src/domain/usecases/RegisterUserUseCase";
 
 import * as jestExtendedMatchers from 'jest-extended';
 expect.extend(jestExtendedMatchers)
 
-
 describe("RegisterUserUseCase", () => {
 
+  const userRepository = mock<UserRepository>();
+  const usecase = new RegisterUserUseCase(userRepository)
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   test("store the user in the repository", () => {
-    const userRepository = mock<UserRepository>();
-    const usecase = new RegisterUserUseCase(userRepository)
+    userRepository.isUsernameAlreadyUsed.mockReturnValue(false)
 
     usecase.run("alice90", "pass123", "About alice.")
 
@@ -22,6 +27,16 @@ describe("RegisterUserUseCase", () => {
       password: "pass123",
       about: "About alice."
     }))
+  })
+
+  test("throws an error if username already used", () => {
+    userRepository.isUsernameAlreadyUsed.mockReturnValue(true)
+
+    expect(() => {
+      usecase.run("alice90", "any", "any");
+    }).toThrowWithMessage(UsernameAlreadyInUseError, "Username alice90 already in use!")
+
+    expect(userRepository.store).not.toHaveBeenCalled()
   })
 
 })

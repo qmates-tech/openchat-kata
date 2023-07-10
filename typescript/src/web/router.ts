@@ -1,5 +1,6 @@
 import { ServerResponse } from 'http';
 import usersRoute from './routes/users';
+import adminRoute from './routes/admin';
 
 export type ParsedRequest = {
   method: string,
@@ -10,6 +11,10 @@ export type ParsedRequest = {
 export function handleReceivedRequest(request: ParsedRequest, response: ServerResponse) {
   if (usersRoute.shouldHandle(request))
     return usersRoute.handle(request, response)
+
+  // TODO add this only on test env
+  if (adminRoute.shouldHandle(request))
+    return adminRoute.handle(request, response)
 
   console.log('Route not found!')
   textResponse(404, "Route not found!", response)

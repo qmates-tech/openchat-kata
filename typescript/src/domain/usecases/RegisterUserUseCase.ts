@@ -10,7 +10,7 @@ export default class RegisterUserUseCase {
   }
 
   run(username: string, password: string, userAbout: string): string {
-    if (userAbout === 'Another about.')
+    if (this.userRepository.isUsernameAlreadyUsed(username))
       throw new UsernameAlreadyInUseError(username)
 
     const newUserUuid = uuid.v4()

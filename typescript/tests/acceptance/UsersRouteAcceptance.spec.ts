@@ -4,6 +4,10 @@ import * as uuid from 'uuid';
 
 describe('users API route', () => {
 
+  afterEach(() => {
+    axios.delete('http://localhost:8000/admin')
+  })
+
   test('retrieve empty list with no registered users', async () => {
     const response = await axios.get('http://localhost:8000/users')
     expect(response.status).toBe(200)

@@ -1,7 +1,7 @@
 import { ServerResponse } from "http";
 import * as uuid from 'uuid';
-import InMemoryUserRepository from "../../database/InMemoryUserRepository";
 import RegisterUserUseCase, { UsernameAlreadyInUseError } from "../../domain/usecases/RegisterUserUseCase";
+import AppFactory from "../AppFactory";
 import { jsonResponseWith, ParsedRequest, textResponse } from "../router";
 
 function handle(request: ParsedRequest, response: ServerResponse): void {
@@ -24,7 +24,7 @@ function postRequest(request: ParsedRequest, response: ServerResponse): void {
     const password: string = request.requestBody.password
     const userAbout: string = request.requestBody.about
 
-    const usecase = new RegisterUserUseCase(new InMemoryUserRepository())
+    const usecase = new RegisterUserUseCase(AppFactory.getUserRepository())
     usecase.run(username, password, userAbout)
 
     jsonResponseWith({
