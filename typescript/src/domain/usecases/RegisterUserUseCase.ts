@@ -1,4 +1,4 @@
-export class RegisterUserUseCase {
+export default class RegisterUserUseCase {
 
   run(username: string, password: string, userAbout: string) {
     if (userAbout === 'Another about.')

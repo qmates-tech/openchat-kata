@@ -1,6 +1,6 @@
 import { ServerResponse } from "http";
 import * as uuid from 'uuid';
-import { RegisterUserUseCase, UsernameAlreadyInUseError } from "../../domain/usecases/RegisterUserUseCase";
+import RegisterUserUseCase, { UsernameAlreadyInUseError } from "../../domain/usecases/RegisterUserUseCase";
 import { jsonResponseWith, ParsedRequest, textResponse } from "../router";
 
 function handle(request: ParsedRequest, response: ServerResponse): void {

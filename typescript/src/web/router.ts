@@ -1,5 +1,5 @@
 import { ServerResponse } from 'http';
-import usersRoute from './routes/users'
+import usersRoute from './routes/users';
 
 export type ParsedRequest = {
   method: string,
@@ -15,7 +15,7 @@ export function handleReceivedRequest(request: ParsedRequest, response: ServerRe
   textResponse(404, "Route not found!", response)
 }
 
-export function textResponse(statusCode: number, text: String, response: ServerResponse) {
+export function textResponse(statusCode: number, text: string, response: ServerResponse) {
   response.writeHead(statusCode, { 'Content-Type': 'text/plain' })
   response.end(text)
 }

@@ -1,5 +1,5 @@
 import http, { IncomingMessage, ServerResponse } from 'http';
-import { emptyResponse, handleReceivedRequest, ParsedRequest } from './router';
+import { ParsedRequest, emptyResponse, handleReceivedRequest } from './router';
 
 console.log("Starting the server at localhost:8000 ...");
 http.createServer((request: IncomingMessage, response: ServerResponse) => {
