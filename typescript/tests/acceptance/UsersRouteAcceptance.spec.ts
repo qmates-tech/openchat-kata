@@ -1,6 +1,8 @@
-import { describe, expect, test } from '@jest/globals';
 import axios, { AxiosResponse } from 'axios';
 import * as uuid from 'uuid';
+
+import * as jestExtendedMatchers from 'jest-extended';
+expect.extend(jestExtendedMatchers)
 
 describe('users API route', () => {
 
@@ -21,7 +23,7 @@ describe('users API route', () => {
   })
 
   test('register some users and retrieve them', async () => {
-    const response = await httpClient.post('/users', {
+    let response = await httpClient.post('/users', {
       "username": "alice90",
       "password": "pass1234",
       "about": "About alice user."
@@ -29,9 +31,36 @@ describe('users API route', () => {
     expect(response.status).toBe(201)
     expect(response.headers['content-type']).toBe("application/json")
     const responseBody = response.data
+    const aliceUUID: string = responseBody.id
     expect(responseBody.username).toBe("alice90")
     expect(responseBody.about).toBe("About alice user.")
     expect(uuid.version(responseBody.id)).toBe(4)
+
+    // ========================================= register another user
+
+    response = await httpClient.post('/users', {
+      "username": "john91",
+      "password": "pass4321",
+      "about": "About john user."
+    })
+    expect(response.status).toBe(201)
+    const johnUUID: string = response.data.id
+
+    // ========================================= retrieve registered users
+
+    const retrieveUsersResponse = await httpClient.get('/users')
+    expect(retrieveUsersResponse.status).toBe(200)
+    expect(retrieveUsersResponse.data).toHaveLength(2)
+    expect(retrieveUsersResponse.data).toSatisfyAny((user) =>
+      user.id === aliceUUID &&
+      user.username === "alice90" &&
+      user.about === "About alice user."
+    )
+    expect(retrieveUsersResponse.data).toSatisfyAny((user) =>
+      user.id === johnUUID &&
+      user.username === "john91" &&
+      user.about === "About john user."
+    )
   })
 
   test('username already in use', async () => {

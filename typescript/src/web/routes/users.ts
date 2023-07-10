@@ -1,8 +1,8 @@
 import { ServerResponse } from "http";
-import * as uuid from 'uuid';
 import RegisterUserUseCase, { UsernameAlreadyInUseError } from "../../domain/usecases/RegisterUserUseCase";
 import AppFactory from "../AppFactory";
 import { jsonResponseWith, ParsedRequest, textResponse } from "../router";
+import User from "../../domain/entities/User";
 
 function handle(request: ParsedRequest, response: ServerResponse): void {
   switch (request.method) {
@@ -15,7 +15,15 @@ function handle(request: ParsedRequest, response: ServerResponse): void {
 }
 
 function getRequest(response: ServerResponse): void {
-  jsonResponseWith([], 200, response)
+  const users: User[] = AppFactory.getUserRepository().getAll()
+  const serializedUsers = users.map((u) => {
+    return {
+      id: u.id,
+      username: u.username,
+      about: u.about
+    }
+  })
+  jsonResponseWith(serializedUsers, 200, response)
 }
 
 function postRequest(request: ParsedRequest, response: ServerResponse): void {
@@ -25,10 +33,10 @@ function postRequest(request: ParsedRequest, response: ServerResponse): void {
     const userAbout: string = request.requestBody.about
 
     const usecase = new RegisterUserUseCase(AppFactory.getUserRepository())
-    usecase.run(username, password, userAbout)
+    const storedUserUUID: string = usecase.run(username, password, userAbout)
 
     jsonResponseWith({
-      "id": uuid.v4(),
+      "id": storedUserUUID,
       "username": username,
       "about": userAbout
     }, 201, response)
