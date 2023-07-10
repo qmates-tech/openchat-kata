@@ -5,7 +5,7 @@
   "license": "ISC",
   "scripts": {
     "start": "node ./dist/src/web/start.js",
-    "test": "jest"
+    "test": "jest --runInBand --verbose"
   },
   "dependencies": {
     "@types/node": "^15.12.4",

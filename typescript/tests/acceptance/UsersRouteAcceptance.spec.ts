@@ -33,18 +33,20 @@ describe('users API route', () => {
     })
     expect(firstRegistrationResponse.status).toBe(201)
 
+    let response: AxiosResponse;
     try {
-      await axios.post('http://localhost:8000/users', {
+      response = await axios.post('http://localhost:8000/users', {
         "username": "bob89",
         "password": "pass123",
         "about": "Another about."
       })
     } catch (error: any) {
-      const response = error.response as AxiosResponse
-      expect(response.status).toBe(400)
-      expect(response.headers['content-type']).toBe("text/plain")
-      expect(response.data).toBe("Username already in use.")
+      response = error.response as AxiosResponse
     }
+
+    expect(response.status).toBe(400)
+    expect(response.headers['content-type']).toBe("text/plain")
+    expect(response.data).toBe("Username already in use.")
   })
 
 })
