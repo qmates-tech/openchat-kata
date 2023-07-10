@@ -4,19 +4,24 @@ import * as uuid from 'uuid';
 
 describe('users API route', () => {
 
+  const httpClient = axios.create({
+    baseURL: 'http://localhost:8000/',
+    timeout: 5000,
+  })
+
   afterEach(() => {
-    axios.delete('http://localhost:8000/admin')
+    httpClient.delete('/admin')
   })
 
   test('retrieve empty list with no registered users', async () => {
-    const response = await axios.get('http://localhost:8000/users')
+    const response = await httpClient.get('/users')
     expect(response.status).toBe(200)
     expect(response.headers['content-type']).toBe("application/json")
     expect(response.data).toStrictEqual([])
   })
 
-  test('register a user', async () => {
-    const response = await axios.post('http://localhost:8000/users', {
+  test('register some users and retrieve them', async () => {
+    const response = await httpClient.post('/users', {
       "username": "alice90",
       "password": "pass1234",
       "about": "About alice user."
@@ -30,7 +35,7 @@ describe('users API route', () => {
   })
 
   test('username already in use', async () => {
-    const firstRegistrationResponse = await axios.post('http://localhost:8000/users', {
+    const firstRegistrationResponse = await httpClient.post('/users', {
       "username": "bob89",
       "password": "123pass",
       "about": "About bob user."
@@ -39,7 +44,7 @@ describe('users API route', () => {
 
     let response: AxiosResponse;
     try {
-      response = await axios.post('http://localhost:8000/users', {
+      response = await httpClient.post('/users', {
         "username": "bob89",
         "password": "pass123",
         "about": "Another about."
