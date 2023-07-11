@@ -16,4 +16,7 @@ export default class InMemoryUserRepository implements UserRepository {
     return [...this.users]
   }
 
+  reset(): void {
+    this.users = []
+  }
 }

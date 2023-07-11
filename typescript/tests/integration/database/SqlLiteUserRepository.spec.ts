@@ -6,18 +6,17 @@ import { RegisteredUser, UserToRegister } from "../../../src/domain/entities/Use
 describe("SqlLiteUserRepository", () => {
 
   const sqliteFilename = 'tests/integration/database/integration.test.db'
-  const sqliteDatabase = new Database(sqliteFilename)
   const repository = new SqlLiteUserRepository(sqliteFilename)
 
-  afterEach(() => {
-    sqliteDatabase.exec('DELETE FROM users');
+  beforeEach(() => {
+    repository.reset()
   })
 
   test("retrieve users from an empty db", () => {
     expect(repository.getAll()).toEqual([])
   })
 
-  test("store some users and retrieve them", () => {
+  test("store some users, retrieve them and reset", () => {
     const alice: UserToRegister = {
       id: "785cd17b-5ad4-497a-84bf-e1543f31170e",
       username: "alice90", password: "any",
@@ -28,11 +27,10 @@ describe("SqlLiteUserRepository", () => {
       username: "bob88", password: "any",
       about: "About bob user."
     }
-
     repository.store(alice)
     repository.store(bob)
-    const users = repository.getAll()
 
+    const users = repository.getAll()
     expect(users).toHaveLength(2)
     expect(users).toSatisfyAny((user: RegisteredUser) =>
       user.id === "785cd17b-5ad4-497a-84bf-e1543f31170e" &&
@@ -44,6 +42,9 @@ describe("SqlLiteUserRepository", () => {
       user.username === "bob88" &&
       user.about === "About bob user."
     )
+
+    repository.reset()
+    expect(repository.getAll()).toHaveLength(0)
   })
 
   test("recognize already used username", () => {
@@ -58,23 +59,7 @@ describe("SqlLiteUserRepository", () => {
     expect(repository.isUsernameAlreadyUsed("bob88")).toBeFalse()
   })
 
-  test('password are stored as sha256', () => {
-    const alice: UserToRegister = {
-      id: '61c4b7ff-d738-4f18-9a15-1d6e3c051867',
-      username: 'any', about: 'any',
-      password: 'notcryptedpassword',
-    }
-    repository.store(alice)
-
-
-    const selectResult: any = sqliteDatabase
-      .prepare('SELECT password FROM users WHERE id = ?')
-      .get('61c4b7ff-d738-4f18-9a15-1d6e3c051867')
-    expect(selectResult.password)
-      .toBe('0e667c78b4d937db64bfefbcb572e66095a1c2a41a948b519e52b09638819127'); // sha256
-  })
-
-  test('reject user to register storing with invalid uuid as id', () => {
+  test('reject user storing with invalid uuid as id', () => {
     const invalid: UserToRegister = {
       id: 'invalid',
       username: 'any', password: 'any', about: 'any'
@@ -103,5 +88,20 @@ describe("SqlLiteUserRepository", () => {
     expect(() => {
       repository.store(user)
     }).toThrowWithMessage(Error, 'Cannot store user, uuid value already used.')
+  })
+
+  test('password are stored as sha256', () => {
+    const alice: UserToRegister = {
+      id: '61c4b7ff-d738-4f18-9a15-1d6e3c051867',
+      username: 'any', about: 'any',
+      password: 'notcryptedpassword',
+    }
+    repository.store(alice)
+
+    const selectResult: any = new Database(sqliteFilename)
+      .prepare('SELECT password FROM users WHERE id = ?')
+      .get('61c4b7ff-d738-4f18-9a15-1d6e3c051867')
+    expect(selectResult.password)
+      .toBe('0e667c78b4d937db64bfefbcb572e66095a1c2a41a948b519e52b09638819127'); // sha256
   })
 })

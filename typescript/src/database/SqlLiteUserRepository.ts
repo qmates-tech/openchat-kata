@@ -1,8 +1,8 @@
 import Database, { SqliteError } from 'better-sqlite3';
-import { RegisteredUser, UserToRegister } from "../domain/entities/User";
-import UserRepository from "../domain/repositories/UserRepository";
 import crypto from 'crypto';
 import * as uuid from 'uuid';
+import { RegisteredUser, UserToRegister } from "../domain/entities/User";
+import UserRepository from "../domain/repositories/UserRepository";
 
 export default class SqlLiteUserRepository implements UserRepository {
 
@@ -35,7 +35,6 @@ export default class SqlLiteUserRepository implements UserRepository {
 
     if (result.changes != 1)
       throw Error('Error during user store operation!')
-
   }
 
   isUsernameAlreadyUsed(usernameToFind: string): boolean {
@@ -54,7 +53,10 @@ export default class SqlLiteUserRepository implements UserRepository {
       username: u.username,
       about: u.about,
     }))
+  }
 
+  reset(): void {
+    this.db.exec('DELETE FROM users');
   }
 
 }
