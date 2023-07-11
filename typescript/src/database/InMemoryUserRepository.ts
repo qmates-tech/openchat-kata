@@ -1,18 +1,18 @@
-import User from "../domain/entities/User";
+import { RegisteredUser, UserToRegister } from "../domain/entities/User";
 import UserRepository from "../domain/repositories/UserRepository";
 
 export default class InMemoryUserRepository implements UserRepository {
-    users: User[] = []
+    users: UserToRegister[] = []
 
-    store(user: User): void {
+    store(user: UserToRegister): void {
         this.users.push(user)
     }
 
     isUsernameAlreadyUsed(usernameToFind: string): boolean {
-        return this.users.some((u: User) => u.username === usernameToFind)
+        return this.users.some((u: UserToRegister) => u.username === usernameToFind)
     }
 
-    getAll(): User[] {
+    getAll(): RegisteredUser[] {
         return [...this.users]
     }
 

@@ -1,4 +1,4 @@
-import User from "../entities/User";
+import { RegisteredUser } from "../entities/User";
 import UserRepository from "../repositories/UserRepository";
 
 export default class GetAllUsersUseCase {
@@ -8,7 +8,7 @@ export default class GetAllUsersUseCase {
     this.userRepository = userRepository
   }
 
-  run(): User[] {
+  run(): RegisteredUser[] {
     return this.userRepository.getAll();
   }
 }

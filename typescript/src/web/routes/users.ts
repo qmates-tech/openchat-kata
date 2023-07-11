@@ -1,9 +1,9 @@
 import { ServerResponse } from "http";
+import { RegisteredUser } from "../../domain/entities/User";
+import GetAllUsersUseCase from "../../domain/usecases/GetAllUsersUseCase";
 import RegisterUserUseCase, { UsernameAlreadyInUseError } from "../../domain/usecases/RegisterUserUseCase";
 import AppFactory from "../AppFactory";
 import { jsonResponseWith, ParsedRequest, textResponse } from "../router";
-import User from "../../domain/entities/User";
-import GetAllUsersUseCase from "../../domain/usecases/GetAllUsersUseCase";
 
 function handle(request: ParsedRequest, response: ServerResponse): void {
   switch (request.method) {
@@ -17,9 +17,9 @@ function handle(request: ParsedRequest, response: ServerResponse): void {
 
 function getRequest(response: ServerResponse): void {
   const usecase = new GetAllUsersUseCase(AppFactory.getUserRepository())
-  const users: User[] = usecase.run()
+  const users: RegisteredUser[] = usecase.run()
 
-  const serializedUsers = users.map((u) => {
+  const serializedUsers = users.map((u: RegisteredUser) => {
     return {
       id: u.id,
       username: u.username,

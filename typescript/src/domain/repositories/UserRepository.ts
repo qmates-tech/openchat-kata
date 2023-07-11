@@ -1,7 +1,7 @@
-import User from "../entities/User"
+import { RegisteredUser, UserToRegister } from "../entities/User"
 
 export default interface UserRepository {
-    store(user: User): void
+    store(user: UserToRegister): void
     isUsernameAlreadyUsed(username: string): boolean
-    getAll(): User[]
+    getAll(): RegisteredUser[]
 }

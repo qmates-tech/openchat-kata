@@ -1,6 +1,5 @@
-import User from "../entities/User";
+import { newUserToRegister } from '../entities/User';
 import UserRepository from "../repositories/UserRepository";
-import * as uuid from 'uuid';
 
 export default class RegisterUserUseCase {
   private userRepository: UserRepository;
@@ -13,16 +12,10 @@ export default class RegisterUserUseCase {
     if (this.userRepository.isUsernameAlreadyUsed(username))
       throw new UsernameAlreadyInUseError(username)
 
-    const newUserUuid = uuid.v4()
-    const userToStore: User = {
-      id: newUserUuid,
-      username: username,
-      password: password,
-      about: userAbout
-    } as User
+    const userToStore = newUserToRegister(username, password, userAbout)
     this.userRepository.store(userToStore)
 
-    return newUserUuid
+    return userToStore.id
   }
 }
 
