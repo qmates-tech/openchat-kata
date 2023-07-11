@@ -1,6 +1,7 @@
 import { ServerResponse } from 'http';
-import usersRoute from './routes/users';
 import adminRoute from './routes/admin';
+import timelineRoute from './routes/timeline';
+import usersRoute from './routes/users';
 
 export type ParsedRequest = {
   method: string,
@@ -11,6 +12,8 @@ export type ParsedRequest = {
 export function handleReceivedRequest(request: ParsedRequest, response: ServerResponse) {
   if (usersRoute.shouldHandle(request))
     return usersRoute.handle(request, response)
+  if (timelineRoute.shouldHandle(request))
+    return timelineRoute.handle(request, response)
 
   // TODO add this only on test env
   if (adminRoute.shouldHandle(request))

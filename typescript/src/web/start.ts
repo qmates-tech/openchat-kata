@@ -20,7 +20,7 @@ function parseAndProcessRequest(request: IncomingMessage, receivedData: string, 
       requestBody: requestBody
     }
     handleReceivedRequest(parsedRequest, response)
-  } catch(error) {
+  } catch (error) {
     console.log('Error during request handling!', error)
     emptyResponse(500, response)
   }
