@@ -3,16 +3,16 @@ import UserRepository from "../domain/repositories/UserRepository";
 
 export default class AppFactory {
 
-    private static userRepositoryInstance: UserRepository | null;
+  private static userRepositoryInstance: UserRepository | null;
 
-    static getUserRepository(): UserRepository {
-        if(!this.userRepositoryInstance)
-            this.userRepositoryInstance = new InMemoryUserRepository
+  static getUserRepository(): UserRepository {
+    if (!this.userRepositoryInstance)
+      this.userRepositoryInstance = new InMemoryUserRepository
 
-        return this.userRepositoryInstance
-    }
+    return this.userRepositoryInstance
+  }
 
-    static resetRepositories(): void {
-        this.userRepositoryInstance = null
-    }
+  static resetRepositories(): void {
+    this.userRepositoryInstance = null
+  }
 }
