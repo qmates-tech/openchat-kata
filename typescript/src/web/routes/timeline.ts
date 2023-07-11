@@ -1,11 +1,16 @@
 import { ServerResponse } from "http";
-import { ParsedRequest, Route, textResponse } from "../router";
+import { ParsedRequest, Route, jsonResponseWith, textResponse } from "../router";
+
+const routeRegExp = /^\/users\/(.+)\/timeline$/
 
 export default {
 
   handle: (request: ParsedRequest, response: ServerResponse): void => {
+    const matches = request.url.match(routeRegExp)!
+    const userIdParameter = matches[1]
+
     switch (request.method) {
-      case 'GET': return getRequest(response)
+      case 'GET': return getRequest(userIdParameter, response)
     }
 
     textResponse(405, `Method ${request.method} not allowed!`, response)
@@ -13,12 +18,15 @@ export default {
   },
 
   shouldHandle: (r: ParsedRequest): boolean => {
-    return new RegExp('^\/users\/.+\/timeline$').test(r.url)
+    return (r.url.match(routeRegExp) ?? false)
       && ['GET'].includes(r.method)
   }
 
 } as Route
 
-function getRequest(response: ServerResponse): void {
-  textResponse(404, 'User not found.', response)
+function getRequest(userId: string, response: ServerResponse): void {
+  if(userId === "unexisting")
+    return textResponse(404, 'User not found.', response)
+
+  jsonResponseWith(200, [], response)
 }
