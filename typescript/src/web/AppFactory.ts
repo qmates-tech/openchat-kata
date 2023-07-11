@@ -1,4 +1,4 @@
-import InMemoryUserRepository from "../database/InMemoryUserRepository";
+import SqlLiteUserRepository from "../database/SqlLiteUserRepository";
 import UserRepository from "../domain/repositories/UserRepository";
 
 export default class AppFactory {
@@ -7,12 +7,12 @@ export default class AppFactory {
 
   static getUserRepository(): UserRepository {
     if (!this.userRepositoryInstance)
-      this.userRepositoryInstance = new InMemoryUserRepository
+      this.userRepositoryInstance = new SqlLiteUserRepository('src/database/production.db')
 
     return this.userRepositoryInstance
   }
 
   static resetRepositories(): void {
-    this.userRepositoryInstance = null
+    this.userRepositoryInstance?.reset()
   }
 }

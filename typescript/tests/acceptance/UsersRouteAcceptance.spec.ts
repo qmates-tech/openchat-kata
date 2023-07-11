@@ -9,7 +9,7 @@ describe('users API route', () => {
     timeout: 5000,
   })
 
-  afterEach(() => {
+  beforeEach(() => {
     httpClient.delete('/admin')
   })
 
