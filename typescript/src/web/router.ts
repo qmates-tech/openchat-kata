@@ -9,18 +9,26 @@ export type ParsedRequest = {
   requestBody: any
 }
 
+export type Route = {
+  handle: (req: ParsedRequest, resp: ServerResponse) => void,
+  shouldHandle: (req: ParsedRequest) => boolean
+}
+
 export function handleReceivedRequest(request: ParsedRequest, response: ServerResponse) {
-  if (usersRoute.shouldHandle(request))
-    return usersRoute.handle(request, response)
-  if (timelineRoute.shouldHandle(request))
-    return timelineRoute.handle(request, response)
+  const routes: Route[] = [
+    usersRoute,
+    timelineRoute,
+    adminRoute  // TODO add this only on test env
+  ]
 
-  // TODO add this only on test env
-  if (adminRoute.shouldHandle(request))
-    return adminRoute.handle(request, response)
+  const handler = routes.find((r: Route) => r.shouldHandle(request))
+  if(!handler) {
+    console.log('Route not found!')
+    textResponse(404, 'Route not found!', response)
+    return
+  }
 
-  console.log('Route not found!')
-  textResponse(404, 'Route not found!', response)
+  handler.handle(request, response)
 }
 
 export function textResponse(statusCode: number, text: string, response: ServerResponse) {

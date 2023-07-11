@@ -3,17 +3,26 @@ import { RegisteredUser } from "../../domain/entities/User";
 import GetAllUsersUseCase from "../../domain/usecases/GetAllUsersUseCase";
 import RegisterUserUseCase, { UsernameAlreadyInUseError } from "../../domain/usecases/RegisterUserUseCase";
 import AppFactory from "../AppFactory";
-import { jsonResponseWith, ParsedRequest, textResponse } from "../router";
+import { jsonResponseWith, ParsedRequest, Route, textResponse } from "../router";
 
-function handle(request: ParsedRequest, response: ServerResponse): void {
-  switch (request.method) {
-    case 'GET': return getRequest(response)
-    case 'POST': return postRequest(request, response)
+export default {
+
+  handle: (request: ParsedRequest, response: ServerResponse): void => {
+    switch (request.method) {
+      case 'GET': return getRequest(response)
+      case 'POST': return postRequest(request, response)
+    }
+
+    textResponse(405, `Method ${request.method} not allowed!`, response)
+    return
+  },
+
+  shouldHandle: (r: ParsedRequest): boolean => {
+    return r.url === '/users'
+      && ['GET', 'POST'].includes(r.method)
   }
 
-  textResponse(405, `Method ${request.method} not allowed!`, response)
-  return
-}
+} as Route
 
 function getRequest(response: ServerResponse): void {
   const usecase = new GetAllUsersUseCase(AppFactory.getUserRepository())
@@ -50,14 +59,4 @@ function postRequest(request: ParsedRequest, response: ServerResponse): void {
     throw err
   }
   return
-}
-
-function shouldHandle(r: ParsedRequest) {
-  return r.url === '/users'
-    && ['GET', 'POST'].includes(r.method)
-}
-
-export default {
-  shouldHandle: shouldHandle,
-  handle: handle
 }
