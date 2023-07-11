@@ -26,7 +26,7 @@ function getRequest(response: ServerResponse): void {
       about: u.about
     }
   })
-  jsonResponseWith(serializedUsers, 200, response)
+  jsonResponseWith(200, serializedUsers, response)
 }
 
 function postRequest(request: ParsedRequest, response: ServerResponse): void {
@@ -38,11 +38,11 @@ function postRequest(request: ParsedRequest, response: ServerResponse): void {
     const usecase = new RegisterUserUseCase(AppFactory.getUserRepository())
     const storedUserUUID: string = usecase.run(username, password, userAbout)
 
-    jsonResponseWith({
+    jsonResponseWith(201, {
       "id": storedUserUUID,
       "username": username,
       "about": userAbout
-    }, 201, response)
+    }, response)
   } catch (err: any) {
     if (err instanceof UsernameAlreadyInUseError)
       return textResponse(400, 'Username already in use.', response)

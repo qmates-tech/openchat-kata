@@ -17,7 +17,7 @@ export function handleReceivedRequest(request: ParsedRequest, response: ServerRe
     return adminRoute.handle(request, response)
 
   console.log('Route not found!')
-  textResponse(404, "Route not found!", response)
+  textResponse(404, 'Route not found!', response)
 }
 
 export function textResponse(statusCode: number, text: string, response: ServerResponse) {
@@ -25,7 +25,7 @@ export function textResponse(statusCode: number, text: string, response: ServerR
   response.end(text)
 }
 
-export function jsonResponseWith(body: object, statusCode: number, response: ServerResponse) {
+export function jsonResponseWith(statusCode: number, body: object, response: ServerResponse) {
   response.writeHead(statusCode, { 'Content-Type': 'application/json' })
   response.end(JSON.stringify(body))
 }
