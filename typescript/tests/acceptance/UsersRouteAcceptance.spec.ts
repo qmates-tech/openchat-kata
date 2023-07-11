@@ -38,21 +38,16 @@ describe('users API route', () => {
     expect(responseBody.about).toBe("About alice user.")
     expect(uuid.version(responseBody.id)).toBe(4)
 
-    // ========================================= register another user
+    // ========================================= register some users
 
-    response = await httpClient.post('/users', {
-      "username": "john91",
-      "password": "pass4321",
-      "about": "About john user."
-    })
-    expect(response.status).toBe(201)
-    const johnUUID: string = response.data.id
+    const johnUUID = await registerUser("john91", "pass4321", "About john user.", httpClient)
+    const martinUUID = await registerUser("martin85", "pass$$", "About martin user.", httpClient)
 
     // ========================================= retrieve registered users
 
     const retrieveUsersResponse = await httpClient.get('/users')
     expect(retrieveUsersResponse.status).toBe(200)
-    expect(retrieveUsersResponse.data).toHaveLength(2)
+    expect(retrieveUsersResponse.data).toHaveLength(3)
     expect(retrieveUsersResponse.data).toSatisfyAny((user) =>
       user.id === aliceUUID &&
       user.username === "alice90" &&
@@ -63,15 +58,15 @@ describe('users API route', () => {
       user.username === "john91" &&
       user.about === "About john user."
     )
+    expect(retrieveUsersResponse.data).toSatisfyAny((user) =>
+      user.id === martinUUID &&
+      user.username === "martin85" &&
+      user.about === "About martin user."
+    )
   })
 
   test('username already in use', async () => {
-    const firstRegistrationResponse = await httpClient.post('/users', {
-      "username": "bob89",
-      "password": "123pass",
-      "about": "About bob user."
-    })
-    expect(firstRegistrationResponse.status).toBe(201)
+    registerUser("bob89", "123pass", "About bob user.", httpClient)
 
     let response: AxiosResponse
     try {
@@ -90,3 +85,18 @@ describe('users API route', () => {
   })
 
 })
+
+export async function registerUser(
+  username: string,
+  password: string,
+  about: string,
+  httpClient: AxiosInstance
+) : Promise<string> {
+  const response = await httpClient.post('/users', {
+    "username": username,
+    "password": password,
+    "about": about
+  })
+  expect(response.status).toBe(201)
+   return response.data.id as string
+}
