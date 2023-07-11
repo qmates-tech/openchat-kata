@@ -32,11 +32,12 @@ describe('users API route', () => {
     })
     expect(response.status).toBe(201)
     expect(response.headers['content-type']).toBe("application/json")
-    const responseBody = response.data
-    const aliceUUID: string = responseBody.id
-    expect(responseBody.username).toBe("alice90")
-    expect(responseBody.about).toBe("About alice user.")
-    expect(uuid.version(responseBody.id)).toBe(4)
+    expect(response.data).toMatchObject({
+      id: expect.toSatisfy((v: string) => uuid.version(v) === 4),
+      username: "alice90",
+      about: "About alice user."
+    })
+    const aliceUUID: string = response.data.id
 
     // ========================================= register some users
 
