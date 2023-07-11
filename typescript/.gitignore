@@ -33,3 +33,6 @@ yarn-error.log*
 .npmrc
 
 store/*.json
+
+# database files
+*.db

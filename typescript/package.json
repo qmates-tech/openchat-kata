@@ -8,9 +8,11 @@
     "test": "jest --runInBand --verbose"
   },
   "dependencies": {
+    "better-sqlite3": "^8.4.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.4",
     "@types/jest": "^29.5.2",
     "@types/node": "^15.12.4",
     "@types/uuid": "^9.0.0",
