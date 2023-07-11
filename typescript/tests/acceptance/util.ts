@@ -1,5 +1,6 @@
 import { expect } from '@jest/globals';
-import { AxiosInstance } from "axios"
+import { AxiosInstance } from "axios";
+import * as uuid from 'uuid';
 
 export async function registerUser(
   username: string,
@@ -14,4 +15,8 @@ export async function registerUser(
   })
   expect(response.status).toBe(201)
   return response.data.id as string
+}
+
+export function isValidUUID4(value: string): boolean {
+  return uuid.version(value) === 4
 }

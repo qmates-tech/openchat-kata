@@ -1,7 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import 'jest-extended';
 import { anyString } from 'jest-mock-extended';
-import * as uuid from 'uuid';
 import * as AcceptanceTestsUtil from './util';
 
 describe('user timeline API route', () => {
@@ -51,7 +50,7 @@ describe('user timeline API route', () => {
     expect(response.status).toBe(201)
     expect(response.headers['content-type']).toBe("application/json")
     expect(response.data).toMatchObject({
-      postId: expect.toSatisfy((v: string) => uuid.version(v) === 4),
+      postId: expect.toSatisfy(AcceptanceTestsUtil.isValidUUID4),
       userId: aliceUUID,
       text: "The first post of alice.",
       dateTime: anyString()

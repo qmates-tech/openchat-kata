@@ -34,7 +34,7 @@ describe('users API route', () => {
     expect(response.status).toBe(201)
     expect(response.headers['content-type']).toBe("application/json")
     expect(response.data).toMatchObject({
-      id: expect.toSatisfy((v: string) => uuid.version(v) === 4),
+      id: expect.toSatisfy(AcceptanceTestsUtil.isValidUUID4),
       username: "alice90",
       about: "About alice user."
     })
