@@ -1,8 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
+import 'jest-extended';
 import * as uuid from 'uuid';
-
-import * as jestExtendedMatchers from 'jest-extended';
-expect.extend(jestExtendedMatchers)
 
 describe('users API route', () => {
 

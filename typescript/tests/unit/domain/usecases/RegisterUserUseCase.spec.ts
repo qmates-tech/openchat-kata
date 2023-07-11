@@ -1,10 +1,8 @@
+import 'jest-extended';
 import { mock } from 'jest-mock-extended';
 import * as uuid from 'uuid';
 import UserRepository from '../../../../src/domain/repositories/UserRepository';
 import RegisterUserUseCase, { UsernameAlreadyInUseError } from "../../../../src/domain/usecases/RegisterUserUseCase";
-
-import * as jestExtendedMatchers from 'jest-extended';
-expect.extend(jestExtendedMatchers)
 
 describe("RegisterUserUseCase", () => {
 
