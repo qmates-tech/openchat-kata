@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import 'jest-extended';
 import * as uuid from 'uuid';
+import * as AcceptanceTestsUtil from './util';
 
 describe('users API route', () => {
 
@@ -41,8 +42,8 @@ describe('users API route', () => {
 
     // ========================================= register some users
 
-    const johnUUID = await registerUser("john91", "pass4321", "About john user.", httpClient)
-    const martinUUID = await registerUser("martin85", "pass$$", "About martin user.", httpClient)
+    const johnUUID = await AcceptanceTestsUtil.registerUser("john91", "pass4321", "About john user.", httpClient)
+    const martinUUID = await AcceptanceTestsUtil.registerUser("martin85", "pass$$", "About martin user.", httpClient)
 
     // ========================================= retrieve registered users
 
@@ -67,7 +68,7 @@ describe('users API route', () => {
   })
 
   test('username already in use', async () => {
-    registerUser("bob89", "123pass", "About bob user.", httpClient)
+    await AcceptanceTestsUtil.registerUser("bob89", "123pass", "About bob user.", httpClient)
 
     let response: AxiosResponse
     try {
@@ -87,17 +88,3 @@ describe('users API route', () => {
 
 })
 
-export async function registerUser(
-  username: string,
-  password: string,
-  about: string,
-  httpClient: AxiosInstance
-) : Promise<string> {
-  const response = await httpClient.post('/users', {
-    "username": username,
-    "password": password,
-    "about": about
-  })
-  expect(response.status).toBe(201)
-   return response.data.id as string
-}
