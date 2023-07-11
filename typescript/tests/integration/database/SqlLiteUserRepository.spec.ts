@@ -74,6 +74,23 @@ describe("SqlLiteUserRepository", () => {
       .toBe('0e667c78b4d937db64bfefbcb572e66095a1c2a41a948b519e52b09638819127'); // sha256
   })
 
-  //test("cannot store user with not valid uuid 4 id", () => {
+  test('reject user to register storing with invalid uuid as id', () => {
+    const invalid: UserToRegister = {
+      id: 'invalid',
+      username: 'any', password: 'any', about: 'any'
+    }
+    const uuidV1: UserToRegister = {
+      id: 'ea4626ec-1fe8-11ee-be56-0242ac120002', // uuid v1
+      username: 'any', password: 'any', about: 'any'
+    }
+
+    expect(() => {
+      repository.store(invalid)
+    }).toThrowWithMessage(Error, 'Cannot store user, invalid v4 uuid id value.')
+
+    expect(() => {
+      repository.store(uuidV1)
+    }).toThrowWithMessage(Error, 'Cannot store user, invalid v4 uuid id value.')
+  })
 
 })

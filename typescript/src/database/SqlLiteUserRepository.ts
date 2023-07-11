@@ -2,6 +2,7 @@ import Database from 'better-sqlite3';
 import { RegisteredUser, UserToRegister } from "../domain/entities/User";
 import UserRepository from "../domain/repositories/UserRepository";
 import crypto from 'crypto';
+import * as uuid from 'uuid';
 
 export default class SqlLiteUserRepository implements UserRepository {
 
@@ -12,6 +13,9 @@ export default class SqlLiteUserRepository implements UserRepository {
   }
 
   store(user: UserToRegister): void {
+    if(!uuid.validate(user.id) || uuid.version(user.id) != 4)
+      throw new Error('Cannot store user, invalid v4 uuid id value.')
+
     const result = this.db
       .prepare('INSERT INTO users (id, username, password, about) VALUES (?, ?, ?, ?)')
       .run(
