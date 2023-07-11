@@ -9,7 +9,11 @@ describe('users API route', () => {
     timeout: 5000,
   })
 
-  beforeEach(() => {
+  beforeAll(async () => {
+    await httpClient.delete('/admin')
+  })
+
+  afterEach(() => {
     httpClient.delete('/admin')
   })
 
@@ -69,7 +73,7 @@ describe('users API route', () => {
     })
     expect(firstRegistrationResponse.status).toBe(201)
 
-    let response: AxiosResponse;
+    let response: AxiosResponse
     try {
       response = await httpClient.post('/users', {
         "username": "bob89",
