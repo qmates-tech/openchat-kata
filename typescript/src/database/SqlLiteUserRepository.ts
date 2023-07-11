@@ -1,4 +1,4 @@
-import Database from 'better-sqlite3';
+import Database, { SqliteError } from 'better-sqlite3';
 import { RegisteredUser, UserToRegister } from "../domain/entities/User";
 import UserRepository from "../domain/repositories/UserRepository";
 import crypto from 'crypto';
@@ -13,20 +13,29 @@ export default class SqlLiteUserRepository implements UserRepository {
   }
 
   store(user: UserToRegister): void {
-    if(!uuid.validate(user.id) || uuid.version(user.id) != 4)
+    if (!uuid.validate(user.id) || uuid.version(user.id) != 4)
       throw new Error('Cannot store user, invalid v4 uuid id value.')
 
-    const result = this.db
-      .prepare('INSERT INTO users (id, username, password, about) VALUES (?, ?, ?, ?)')
-      .run(
-        user.id,
-        user.username,
-        crypto.createHash('sha256').update(user.password).digest('hex'),
-        user.about
-      )
+    let result: Database.RunResult;
+    try {
+      result = this.db
+        .prepare('INSERT INTO users (id, username, password, about) VALUES (?, ?, ?, ?)')
+        .run(
+          user.id,
+          user.username,
+          crypto.createHash('sha256').update(user.password).digest('hex'),
+          user.about
+        )
+    } catch (err: any) {
+      if (err instanceof SqliteError && err.message === 'UNIQUE constraint failed: users.id')
+        throw Error('Cannot store user, uuid value already used.')
+
+      throw err
+    }
 
     if (result.changes != 1)
-      throw Error("Error during user store operation!")
+      throw Error('Error during user store operation!')
+
   }
 
   isUsernameAlreadyUsed(usernameToFind: string): boolean {

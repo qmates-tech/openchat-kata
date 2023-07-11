@@ -93,4 +93,15 @@ describe("SqlLiteUserRepository", () => {
     }).toThrowWithMessage(Error, 'Cannot store user, invalid v4 uuid id value.')
   })
 
+  test('reject already stored uuid value as id', () => {
+    const user: UserToRegister = {
+      id: 'fc05ce73-87bd-458d-9b10-57941b557be8',
+      username: 'any', password: 'any', about: 'any'
+    }
+    repository.store(user)
+
+    expect(() => {
+      repository.store(user)
+    }).toThrowWithMessage(Error, 'Cannot store user, uuid value already used.')
+  })
 })
