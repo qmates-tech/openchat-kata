@@ -1,9 +1,9 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import 'jest-extended';
 
 describe('user timeline API route', () => {
 
-  const httpClient = axios.create({
+  const httpClient: AxiosInstance = axios.create({
     baseURL: 'http://localhost:8000/',
     timeout: 5000,
   })
