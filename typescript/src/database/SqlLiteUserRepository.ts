@@ -1,6 +1,7 @@
 import Database from 'better-sqlite3';
 import { RegisteredUser, UserToRegister } from "../domain/entities/User";
 import UserRepository from "../domain/repositories/UserRepository";
+import crypto from 'crypto';
 
 export default class SqlLiteUserRepository implements UserRepository {
 
@@ -11,18 +12,24 @@ export default class SqlLiteUserRepository implements UserRepository {
   }
 
   store(user: UserToRegister): void {
-    const result = this.db.prepare(
-      'INSERT INTO users (id, username, password, about) VALUES (?, ?, ?, ?)'
-    ).run(user.id, user.username, user.password, user.about)
+    const result = this.db
+      .prepare('INSERT INTO users (id, username, password, about) VALUES (?, ?, ?, ?)')
+      .run(
+        user.id,
+        user.username,
+        crypto.createHash('sha256').update(user.password).digest('hex'),
+        user.about
+      )
 
     if (result.changes != 1)
       throw Error("Error during user store operation!")
   }
 
   isUsernameAlreadyUsed(usernameToFind: string): boolean {
-    const result: any = this.db.prepare(
-      'SELECT count(*) as count FROM users WHERE username = ?'
-    ).get(usernameToFind)
+    const result: any = this.db
+      .prepare('SELECT count(*) as count FROM users WHERE username = ?')
+      .get(usernameToFind)
+
     return result.count > 0
   }
 

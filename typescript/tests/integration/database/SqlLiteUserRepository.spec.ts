@@ -6,11 +6,11 @@ import { RegisteredUser, UserToRegister } from "../../../src/domain/entities/Use
 describe("SqlLiteUserRepository", () => {
 
   const sqliteFilename = 'tests/integration/database/integration.test.db'
+  const sqliteDatabase = new Database(sqliteFilename)
   const repository = new SqlLiteUserRepository(sqliteFilename)
 
   afterEach(() => {
-    const db = new Database(sqliteFilename)
-    db.exec('DELETE FROM users');
+    sqliteDatabase.exec('DELETE FROM users');
   })
 
   test("retrieve users from an empty db", () => {
@@ -58,7 +58,22 @@ describe("SqlLiteUserRepository", () => {
     expect(repository.isUsernameAlreadyUsed("bob88")).toBeFalse()
   })
 
+  test('password are stored as sha256', () => {
+    const alice: UserToRegister = {
+      id: '61c4b7ff-d738-4f18-9a15-1d6e3c051867',
+      username: 'any', about: 'any',
+      password: 'notcryptedpassword',
+    }
+    repository.store(alice)
+
+
+    const selectResult: any = sqliteDatabase
+      .prepare('SELECT password FROM users WHERE id = ?')
+      .get('61c4b7ff-d738-4f18-9a15-1d6e3c051867')
+    expect(selectResult.password)
+      .toBe('0e667c78b4d937db64bfefbcb572e66095a1c2a41a948b519e52b09638819127'); // sha256
+  })
+
   //test("cannot store user with not valid uuid 4 id", () => {
-  //test("password are stored as sha256", () => {
 
 })
