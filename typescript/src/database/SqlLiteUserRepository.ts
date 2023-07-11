@@ -20,11 +20,14 @@ export default class SqlLiteUserRepository implements UserRepository {
     }
 
     isUsernameAlreadyUsed(usernameToFind: string): boolean {
-        return false
+        const result: any = this.db.prepare(
+            'SELECT count(*) as count FROM users WHERE username = ?'
+        ).get(usernameToFind)
+        return result.count > 0
     }
 
     getAll(): RegisteredUser[] {
-        const result: any[] = this.db.prepare('SELECT * from users').all()
+        const result: any[] = this.db.prepare('SELECT * FROM users').all()
 
         return result.map((u: any) => ({
             id: u.id,
