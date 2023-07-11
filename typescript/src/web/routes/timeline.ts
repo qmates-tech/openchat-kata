@@ -38,6 +38,11 @@ function postRequest(userId: string, request: ParsedRequest, response: ServerRes
     postId: uuid.v4(),
     userId: userId,
     text: request.requestBody.text,
-    dateTime: "2018-01-10T11:30:00Z"
+    dateTime: serializeDatetime(new Date())
   }, response)
+}
+
+function serializeDatetime(datetime: Date): string {
+  // 2018-01-10T11:30:00Z (iso format but without milliseconds)
+  return datetime.toISOString().split('.')[0] + 'Z'
 }

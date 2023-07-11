@@ -1,6 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import 'jest-extended';
-import { anyString } from 'jest-mock-extended';
 import * as AcceptanceTestsUtil from './util';
 
 describe('user timeline API route', () => {
@@ -53,7 +52,7 @@ describe('user timeline API route', () => {
       postId: expect.toSatisfy(AcceptanceTestsUtil.isValidUUID4),
       userId: aliceUUID,
       text: "The first post of alice.",
-      dateTime: anyString()
+      dateTime: expect.toSatisfy(AcceptanceTestsUtil.hasExpectedIsoDatetimeFormat)
     })
   })
 
