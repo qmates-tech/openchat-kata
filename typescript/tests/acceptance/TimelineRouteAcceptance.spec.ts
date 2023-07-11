@@ -1,5 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import 'jest-extended';
+import { anyString } from 'jest-mock-extended';
+import * as uuid from 'uuid';
 import * as UsersRouteAcceptanceTests from './UsersRouteAcceptance.spec';
 
 describe('user timeline API route', () => {
@@ -37,6 +39,23 @@ describe('user timeline API route', () => {
     expect(response.status).toBe(200)
     expect(response.headers['content-type']).toBe("application/json")
     expect(response.data).toStrictEqual([])
+  })
+
+  test('user publish a post', async () => {
+    const aliceUUID = UsersRouteAcceptanceTests.registerUser("alice90", "any", "any", httpClient)
+
+    let response = await httpClient.post(`/users/${aliceUUID}/timeline`, {
+      "text": "The first post of alice."
+    })
+
+    expect(response.status).toBe(201)
+    expect(response.headers['content-type']).toBe("application/json")
+    expect(response.data).toMatchObject({
+      postId: expect.toSatisfy((v: string) => uuid.version(v) === 4),
+      userId: aliceUUID,
+      text: "The first post of alice.",
+      dateTime: anyString()
+    })
   })
 
 })
