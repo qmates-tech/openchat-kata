@@ -1,6 +1,6 @@
 import { ServerResponse } from "http";
-import * as uuid from "uuid";
 import { ParsedRequest, Route, jsonResponseWith, textResponse } from "../router";
+import Post, { newPost } from "../../domain/entities/Post";
 
 const routeRegExp = /^\/users\/(.+)\/timeline$/
 
@@ -34,11 +34,14 @@ function getRequest(userId: string, response: ServerResponse): void {
 }
 
 function postRequest(userId: string, request: ParsedRequest, response: ServerResponse): void {
+  const postText = request.requestBody.text
+  const post: Post = newPost(postText, userId)
+  
   jsonResponseWith(201, {
-    postId: uuid.v4(),
-    userId: userId,
-    text: request.requestBody.text,
-    dateTime: serializeDatetime(new Date())
+    postId: post.id,
+    userId: post.userId,
+    text: post.text,
+    dateTime: serializeDatetime(post.dateTime)
   }, response)
 }
 
