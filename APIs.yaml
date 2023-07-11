@@ -112,6 +112,8 @@ paths:
             $ref: "#/definitions/Post"
         "400":
           description: Post contains inappropriate language.
+        "404":
+          description: User not found.
     get:
       tags:
         - post
@@ -133,6 +135,8 @@ paths:
             type: array
             items:
               $ref: "#/definitions/Post"
+        "404":
+          description: User not found.
 
   /followings:
     post:
@@ -200,6 +204,8 @@ paths:
             type: array
             items:
               $ref: "#/definitions/Post"
+        "404":
+          description: User not found.
 
 definitions:
   Registration:
