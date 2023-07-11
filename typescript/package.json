@@ -8,12 +8,12 @@
     "test": "jest --runInBand --verbose"
   },
   "dependencies": {
-    "@types/node": "^15.12.4",
-    "@types/uuid": "^9.0.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.2",
+    "@types/node": "^15.12.4",
+    "@types/uuid": "^9.0.0",
     "axios": "^1.4.0",
     "jest": "^29.0.3",
     "jest-extended": "^4.0.0",
