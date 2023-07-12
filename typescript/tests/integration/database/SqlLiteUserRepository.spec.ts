@@ -47,61 +47,65 @@ describe('SqlLiteUserRepository', () => {
     expect(repository.getAll()).toHaveLength(0)
   })
 
-  test('recognize already used username', () => {
-    const alice: UserToRegister = {
-      id: "046a4497-9fd1-4b89-ad21-fd2d7562c0e0",
-      username: "alice90", password: "any",
-      about: "About alice user."
-    }
-    repository.store(alice)
+  describe('store method', () => {
 
-    expect(repository.isUsernameAlreadyUsed("alice90")).toBeTrue()
-    expect(repository.isUsernameAlreadyUsed("bob88")).toBeFalse()
-  })
+    test('recognizes already used username', () => {
+      const alice: UserToRegister = {
+        id: "046a4497-9fd1-4b89-ad21-fd2d7562c0e0",
+        username: "alice90", password: "any",
+        about: "About alice user."
+      }
+      repository.store(alice)
 
-  test('reject user storing with invalid uuid as id', () => {
-    const invalid: UserToRegister = {
-      id: 'invalid',
-      username: 'any', password: 'any', about: 'any'
-    }
-    const uuidV1: UserToRegister = {
-      id: 'ea4626ec-1fe8-11ee-be56-0242ac120002', // uuid v1
-      username: 'any', password: 'any', about: 'any'
-    }
+      expect(repository.isUsernameAlreadyUsed("alice90")).toBeTrue()
+      expect(repository.isUsernameAlreadyUsed("bob88")).toBeFalse()
+    })
 
-    expect(() => {
-      repository.store(invalid)
-    }).toThrowWithMessage(Error, 'Cannot store user, invalid v4 uuid id value.')
+    test('rejects user storing with invalid uuid as id', () => {
+      const invalid: UserToRegister = {
+        id: 'invalid',
+        username: 'any', password: 'any', about: 'any'
+      }
+      const uuidV1: UserToRegister = {
+        id: 'ea4626ec-1fe8-11ee-be56-0242ac120002', // uuid v1
+        username: 'any', password: 'any', about: 'any'
+      }
 
-    expect(() => {
-      repository.store(uuidV1)
-    }).toThrowWithMessage(Error, 'Cannot store user, invalid v4 uuid id value.')
-  })
+      expect(() => {
+        repository.store(invalid)
+      }).toThrowWithMessage(Error, 'Cannot store user, invalid v4 uuid id value.')
 
-  test('reject already stored uuid value as id', () => {
-    const user: UserToRegister = {
-      id: 'fc05ce73-87bd-458d-9b10-57941b557be8',
-      username: 'any', password: 'any', about: 'any'
-    }
-    repository.store(user)
+      expect(() => {
+        repository.store(uuidV1)
+      }).toThrowWithMessage(Error, 'Cannot store user, invalid v4 uuid id value.')
+    })
 
-    expect(() => {
+    test('rejects already stored uuid value as id', () => {
+      const user: UserToRegister = {
+        id: 'fc05ce73-87bd-458d-9b10-57941b557be8',
+        username: 'any', password: 'any', about: 'any'
+      }
       repository.store(user)
-    }).toThrowWithMessage(Error, 'Cannot store user, uuid value already used.')
-  })
 
-  test('password are stored as sha256', () => {
-    const alice: UserToRegister = {
-      id: '61c4b7ff-d738-4f18-9a15-1d6e3c051867',
-      username: 'any', about: 'any',
-      password: 'notcryptedpassword',
-    }
-    repository.store(alice)
+      expect(() => {
+        repository.store(user)
+      }).toThrowWithMessage(Error, 'Cannot store user, uuid value already used.')
+    })
 
-    const selectResult: any = new Database(sqliteFilename)
-      .prepare('SELECT password FROM users WHERE id = ?')
-      .get('61c4b7ff-d738-4f18-9a15-1d6e3c051867')
-    expect(selectResult.password)
-      .toBe('0e667c78b4d937db64bfefbcb572e66095a1c2a41a948b519e52b09638819127'); // sha256
+    test('stores passwords as sha256', () => {
+      const alice: UserToRegister = {
+        id: '61c4b7ff-d738-4f18-9a15-1d6e3c051867',
+        username: 'any', about: 'any',
+        password: 'notcryptedpassword',
+      }
+      repository.store(alice)
+
+      const selectResult: any = new Database(sqliteFilename)
+        .prepare('SELECT password FROM users WHERE id = ?')
+        .get('61c4b7ff-d738-4f18-9a15-1d6e3c051867')
+      expect(selectResult.password)
+        .toBe('0e667c78b4d937db64bfefbcb572e66095a1c2a41a948b519e52b09638819127'); // sha256
+    })
+
   })
 })
