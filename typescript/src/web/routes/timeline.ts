@@ -3,6 +3,8 @@ import Post from "../../domain/entities/Post";
 import SubmitPostUseCase from "../../domain/usecases/SubmitPostUseCase";
 import AppFactory from "../AppFactory";
 import { ParsedRequest, Route, jsonResponseWith, textResponse } from "../router";
+import GetTimelineUseCase from "../../domain/usecases/GetTimelineUseCase";
+import { UserNotFoundError } from "../../domain/usecases/errors/UserNotFoundError";
 
 const routeRegExp = /^\/users\/(.+)\/timeline$/
 
@@ -29,10 +31,21 @@ export default {
 } as Route
 
 function getRequest(userId: string, response: ServerResponse): void {
-  if (userId === "unexisting")
-    return textResponse(404, 'User not found.', response)
+  try {
+    const usecase = new GetTimelineUseCase(
+      AppFactory.getPostRepository(),
+      AppFactory.getUserRepository()
+    )
 
-  jsonResponseWith(200, [], response)
+    const posts: Post[] = usecase.run(userId)
+    jsonResponseWith(200, posts, response)
+  } catch (err: any) {
+    if (err instanceof UserNotFoundError)
+      return textResponse(404, 'User not found.', response)
+
+    throw err
+  }
+
 }
 
 function postRequest(userId: string, request: ParsedRequest, response: ServerResponse): void {
