@@ -21,7 +21,7 @@ describe('users API route', () => {
   test('retrieve empty list with no registered users', async () => {
     const response = await httpClient.get('/users')
     expect(response.status).toBe(200)
-    expect(response.headers['content-type']).toBe("application/json")
+    expect(response.headers['content-type']).toBe('application/json')
     expect(response.data).toStrictEqual([])
   })
 
@@ -32,7 +32,7 @@ describe('users API route', () => {
       "about": "About alice user."
     })
     expect(response.status).toBe(201)
-    expect(response.headers['content-type']).toBe("application/json")
+    expect(response.headers['content-type']).toBe('application/json')
     expect(response.data).toMatchObject({
       id: expect.toSatisfy(AcceptanceTestsUtil.isValidUUID4),
       username: "alice90",
@@ -82,8 +82,8 @@ describe('users API route', () => {
     }
 
     expect(response.status).toBe(400)
-    expect(response.headers['content-type']).toBe("text/plain")
-    expect(response.data).toBe("Username already in use.")
+    expect(response.headers['content-type']).toBe('text/plain')
+    expect(response.data).toBe('Username already in use.')
   })
 
 })

@@ -1,7 +1,7 @@
 import http, { IncomingMessage, ServerResponse } from 'http';
 import { ParsedRequest, emptyResponse, handleReceivedRequest } from './router';
 
-console.log("Starting the server at localhost:8000 ...");
+console.log('Starting the server at localhost:8000 ...');
 http.createServer((request: IncomingMessage, response: ServerResponse) => {
   let receivedData = '';
   request.on('data', chunk => receivedData += chunk);

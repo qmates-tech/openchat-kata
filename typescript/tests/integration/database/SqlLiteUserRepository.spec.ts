@@ -3,7 +3,7 @@ import 'jest-extended'
 import SqlLiteUserRepository from "../../../src/database/SqlLiteUserRepository"
 import { RegisteredUser, UserToRegister } from "../../../src/domain/entities/User"
 
-describe("SqlLiteUserRepository", () => {
+describe('SqlLiteUserRepository', () => {
 
   const sqliteFilename = 'tests/integration/database/integration.test.db'
   const repository = new SqlLiteUserRepository(sqliteFilename)
@@ -12,11 +12,11 @@ describe("SqlLiteUserRepository", () => {
     repository.reset()
   })
 
-  test("retrieve users from an empty db", () => {
+  test('retrieve users from an empty db', () => {
     expect(repository.getAll()).toEqual([])
   })
 
-  test("store some users, retrieve them and reset", () => {
+  test('store some users, retrieve them and reset', () => {
     const alice: UserToRegister = {
       id: "785cd17b-5ad4-497a-84bf-e1543f31170e",
       username: "alice90", password: "any",
@@ -47,7 +47,7 @@ describe("SqlLiteUserRepository", () => {
     expect(repository.getAll()).toHaveLength(0)
   })
 
-  test("recognize already used username", () => {
+  test('recognize already used username', () => {
     const alice: UserToRegister = {
       id: "046a4497-9fd1-4b89-ad21-fd2d7562c0e0",
       username: "alice90", password: "any",

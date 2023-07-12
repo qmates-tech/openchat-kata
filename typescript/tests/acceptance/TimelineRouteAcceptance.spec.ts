@@ -25,8 +25,8 @@ describe('user timeline API route', () => {
       response = error.response as AxiosResponse
     }
     expect(response.status).toBe(404)
-    expect(response.headers['content-type']).toBe("text/plain")
-    expect(response.data).toBe("User not found.")
+    expect(response.headers['content-type']).toBe('text/plain')
+    expect(response.data).toBe('User not found.')
   })
 
   test('empty user timeline', async () => {
@@ -35,7 +35,7 @@ describe('user timeline API route', () => {
     const response: AxiosResponse = await httpClient.get(`/users/${aliceUUID}/timeline`)
 
     expect(response.status).toBe(200)
-    expect(response.headers['content-type']).toBe("application/json")
+    expect(response.headers['content-type']).toBe('application/json')
     expect(response.data).toStrictEqual([])
   })
 
@@ -47,7 +47,7 @@ describe('user timeline API route', () => {
     })
 
     expect(response.status).toBe(201)
-    expect(response.headers['content-type']).toBe("application/json")
+    expect(response.headers['content-type']).toBe('application/json')
     expect(response.data).toMatchObject({
       postId: expect.toSatisfy(AcceptanceTestsUtil.isValidUUID4),
       userId: aliceUUID,
