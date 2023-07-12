@@ -55,6 +55,22 @@ export default class SqlLiteUserRepository implements UserRepository {
     }))
   }
 
+  getUserById(userId: string): RegisteredUser | null {
+    const rows: any[] = this.db
+      .prepare('SELECT * FROM users WHERE id = ?')
+      .all(userId)
+
+    if (rows.length === 0)
+      return null
+
+    const firstRow = rows[0]
+    return {
+      id: firstRow.id,
+      username: firstRow.username,
+      about: firstRow.about,
+    }
+  }
+
   reset(): void {
     this.db.exec('DELETE FROM users');
   }

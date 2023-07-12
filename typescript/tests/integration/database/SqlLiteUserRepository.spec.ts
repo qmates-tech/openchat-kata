@@ -1,7 +1,7 @@
-import Database from 'better-sqlite3'
-import 'jest-extended'
-import SqlLiteUserRepository from "../../../src/database/SqlLiteUserRepository"
-import { RegisteredUser, UserToRegister } from "../../../src/domain/entities/User"
+import Database from 'better-sqlite3';
+import 'jest-extended';
+import SqlLiteUserRepository from "../../../src/database/SqlLiteUserRepository";
+import { RegisteredUser, UserToRegister } from "../../../src/domain/entities/User";
 
 describe('SqlLiteUserRepository', () => {
 
@@ -105,6 +105,34 @@ describe('SqlLiteUserRepository', () => {
         .get('61c4b7ff-d738-4f18-9a15-1d6e3c051867')
       expect(selectResult.password)
         .toBe('0e667c78b4d937db64bfefbcb572e66095a1c2a41a948b519e52b09638819127'); // sha256
+    })
+
+  })
+
+  describe('get user by id', () => {
+
+    test('returns null with no users', () => {
+      expect(repository.getUserById("7a06f0bc-910b-43f1-884c-ce292a95c5d1")).toBeNull()
+      expect(repository.getUserById("invalid")).toBeNull()
+    })
+
+    test('store a user and retrieve it', () => {
+      const aliceUUID = "36715ff2-3faf-4b88-8a11-127c9c4ef971"
+      const alice: UserToRegister = {
+        id: aliceUUID,
+        username: "alice90", password: "notcryptedpassword",
+        about: "About alice user.",
+      }
+      repository.store(alice)
+
+      const retrievedUser = repository.getUserById(aliceUUID)
+
+      const expected: RegisteredUser = {
+        id: aliceUUID,
+        username: "alice90",
+        about: "About alice user."
+      }
+      expect(retrievedUser).toStrictEqual(expected)
     })
 
   })
