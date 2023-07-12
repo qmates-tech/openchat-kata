@@ -1,6 +1,8 @@
 import { ServerResponse } from "http";
+import Post from "../../domain/entities/Post";
+import SubmitPostUseCase from "../../domain/usecases/SubmitPostUseCase";
+import AppFactory from "../AppFactory";
 import { ParsedRequest, Route, jsonResponseWith, textResponse } from "../router";
-import Post, { newPost } from "../../domain/entities/Post";
 
 const routeRegExp = /^\/users\/(.+)\/timeline$/
 
@@ -35,13 +37,14 @@ function getRequest(userId: string, response: ServerResponse): void {
 
 function postRequest(userId: string, request: ParsedRequest, response: ServerResponse): void {
   const postText = request.requestBody.text
-  const post: Post = newPost(postText, userId)
-  
+  const usecase = new SubmitPostUseCase(AppFactory.getPostRepository())
+  const submittedPost: Post = usecase.run(userId, postText)
+
   jsonResponseWith(201, {
-    postId: post.id,
-    userId: post.userId,
-    text: post.text,
-    dateTime: serializeDatetime(post.dateTime)
+    postId: submittedPost.id,
+    userId: submittedPost.userId,
+    text: submittedPost.text,
+    dateTime: serializeDatetime(submittedPost.dateTime)
   }, response)
 }
 
