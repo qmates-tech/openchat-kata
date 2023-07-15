@@ -1,5 +1,6 @@
 package tech.qmates.openchat.domain.usecase;
 
+import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.entity.User;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
@@ -12,7 +13,7 @@ public class GetAllUserUseCase {
         this.userRepository = userRepository;
     }
 
-    public List<User> run() {
+    public List<RegisteredUser> run() {
         return userRepository.getAll();
     }
 }

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.MimeTypes;
+import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.entity.User;
 import tech.qmates.openchat.domain.usecase.GetAllUserUseCase;
 import tech.qmates.openchat.domain.usecase.RegisterUserUseCase;
@@ -25,7 +26,7 @@ public class UsersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         GetAllUserUseCase usecase = new GetAllUserUseCase(AppFactory.getUserRepository());
-        List<User> users = usecase.run();
+        List<RegisteredUser> users = usecase.run();
         List<HashMap<String, Object>> listOfMapUsers = users.stream()
             .map(user -> new HashMap<String, Object>() {{
                 put("id", user.uuid().toString());

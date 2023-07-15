@@ -1,5 +1,6 @@
 package tech.qmates.openchat.database;
 
+import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.entity.User;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
@@ -35,7 +36,7 @@ public class SQLiteUserRepository implements UserRepository {
     }
 
     @Override
-    public List<User> getAll() {
+    public List<RegisteredUser> getAll() {
         return null;
     }
 
