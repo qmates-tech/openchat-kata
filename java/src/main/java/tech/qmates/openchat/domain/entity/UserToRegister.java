@@ -3,14 +3,18 @@ package tech.qmates.openchat.domain.entity;
 import java.util.Objects;
 import java.util.UUID;
 
-public class User {
+public class UserToRegister {
 
     private final UUID uuid;
     private final String username;
     private final String password;
     private final String about;
 
-    public User(UUID uuid, String username, String password, String about) {
+    public static UserToRegister newWith(String username, String password, String about) {
+        return new UserToRegister(UUID.randomUUID(), username, password, about);
+    }
+
+    private UserToRegister(UUID uuid, String username, String password, String about) {
         this.uuid = uuid;
         this.username = username;
         this.password = password;
@@ -37,7 +41,7 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
+        UserToRegister user = (UserToRegister) o;
         return Objects.equals(uuid, user.uuid) &&
             Objects.equals(username, user.username) &&
             Objects.equals(password, user.password) &&

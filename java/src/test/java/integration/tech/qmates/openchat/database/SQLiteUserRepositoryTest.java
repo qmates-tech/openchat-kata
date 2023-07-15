@@ -2,10 +2,8 @@ package integration.tech.qmates.openchat.database;
 
 import org.junit.jupiter.api.Test;
 import tech.qmates.openchat.database.SQLiteUserRepository;
-import tech.qmates.openchat.domain.entity.User;
+import tech.qmates.openchat.domain.entity.UserToRegister;
 import tech.qmates.openchat.domain.repository.UserRepository;
-
-import java.util.UUID;
 
 public class SQLiteUserRepositoryTest {
 
@@ -14,7 +12,7 @@ public class SQLiteUserRepositoryTest {
 
     @Test
     void fooo() {
-        User userToStore = new User(UUID.randomUUID(), "alice90", "pass1234", "About alice user.");
+        UserToRegister userToStore = UserToRegister.newWith("alice90", "pass1234", "About alice user.");
         repository.store(userToStore);
     }
 }

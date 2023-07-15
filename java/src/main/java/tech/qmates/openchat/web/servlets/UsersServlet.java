@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.MimeTypes;
 import tech.qmates.openchat.domain.entity.RegisteredUser;
-import tech.qmates.openchat.domain.entity.User;
 import tech.qmates.openchat.domain.usecase.GetAllUserUseCase;
 import tech.qmates.openchat.domain.usecase.RegisterUserUseCase;
 import tech.qmates.openchat.web.AppFactory;

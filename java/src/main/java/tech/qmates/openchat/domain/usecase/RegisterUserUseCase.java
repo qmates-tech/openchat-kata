@@ -1,6 +1,6 @@
 package tech.qmates.openchat.domain.usecase;
 
-import tech.qmates.openchat.domain.entity.User;
+import tech.qmates.openchat.domain.entity.UserToRegister;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
 import java.util.UUID;
@@ -17,7 +17,7 @@ public class RegisterUserUseCase {
         if(userRepository.isUsernameAlreadyUsed(username))
             throw new UsernameAlreadyInUseException(username);
 
-        User userToBeStored = new User(UUID.randomUUID(), username, password, about);
+        UserToRegister userToBeStored = UserToRegister.newWith(username, password, about);
         this.userRepository.store(userToBeStored);
         return userToBeStored.uuid();
     }

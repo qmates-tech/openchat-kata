@@ -1,7 +1,7 @@
 package tech.qmates.openchat.database;
 
 import tech.qmates.openchat.domain.entity.RegisteredUser;
-import tech.qmates.openchat.domain.entity.User;
+import tech.qmates.openchat.domain.entity.UserToRegister;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class InMemoryUserRepository implements UserRepository {
     private final List<RegisteredUser> users = new ArrayList<>();
 
     @Override
-    public void store(User user) {
+    public void store(UserToRegister user) {
         this.users.add(
             new RegisteredUser(user.uuid(), user.username(), user.about())
         );

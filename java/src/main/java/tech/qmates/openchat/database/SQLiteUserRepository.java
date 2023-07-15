@@ -1,7 +1,7 @@
 package tech.qmates.openchat.database;
 
 import tech.qmates.openchat.domain.entity.RegisteredUser;
-import tech.qmates.openchat.domain.entity.User;
+import tech.qmates.openchat.domain.entity.UserToRegister;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
 import java.sql.Connection;
@@ -19,7 +19,7 @@ public class SQLiteUserRepository implements UserRepository {
     }
 
     @Override
-    public void store(User user) {
+    public void store(UserToRegister user) {
         try {
             Connection connection = openConnection();
             Statement statement = connection.createStatement();
