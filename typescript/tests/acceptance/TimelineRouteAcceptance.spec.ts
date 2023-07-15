@@ -10,11 +10,11 @@ describe('user timeline API route', () => {
   })
 
   beforeAll(async () => {
-    await httpClient.delete('/admin')
+    await AcceptanceTestsUtil.resetApplication(httpClient)
   })
 
   afterEach(() => {
-    httpClient.delete('/admin')
+    AcceptanceTestsUtil.resetApplication(httpClient)
   })
 
   test('unexisting user timeline', async () => {

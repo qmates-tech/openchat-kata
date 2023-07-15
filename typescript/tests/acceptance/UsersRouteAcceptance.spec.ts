@@ -1,6 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import 'jest-extended';
-import * as uuid from 'uuid';
 import * as AcceptanceTestsUtil from './util';
 
 describe('users API route', () => {
@@ -11,11 +10,11 @@ describe('users API route', () => {
   })
 
   beforeAll(async () => {
-    await httpClient.delete('/admin')
+    await AcceptanceTestsUtil.resetApplication(httpClient)
   })
 
   afterEach(() => {
-    httpClient.delete('/admin')
+    AcceptanceTestsUtil.resetApplication(httpClient)
   })
 
   test('retrieve empty list with no registered users', async () => {
@@ -40,7 +39,7 @@ describe('users API route', () => {
     })
     const aliceUUID: string = response.data.id
 
-    // ========================================= register some users
+    // ========================================= register some other users
 
     const johnUUID = await AcceptanceTestsUtil.registerUser("john91", "pass4321", "About john user.", httpClient)
     const martinUUID = await AcceptanceTestsUtil.registerUser("martin85", "pass$$", "About martin user.", httpClient)
@@ -87,4 +86,3 @@ describe('users API route', () => {
   })
 
 })
-

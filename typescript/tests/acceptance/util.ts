@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals';
-import { AxiosInstance } from "axios";
+import { AxiosInstance, AxiosResponse } from "axios";
 import * as uuid from 'uuid';
 
 export async function registerUser(
@@ -26,4 +26,8 @@ export function hasExpectedIsoDatetimeFormat(value: string): boolean {
   // 2018-01-10T11:30:00Z (iso format but without milliseconds)
   const isoStringValue = parsed.toISOString().split('.')[0] + 'Z'
   return value == isoStringValue
+}
+
+export function resetApplication(httpClient: AxiosInstance): Promise<AxiosResponse<any, any>> {
+  return httpClient.delete('/admin');
 }
