@@ -4,7 +4,7 @@ import * as uuid from 'uuid';
 import { RegisteredUser, UserToRegister } from "../domain/entities/User";
 import UserRepository from "../domain/repositories/UserRepository";
 
-export default class SqlLiteUserRepository implements UserRepository {
+export default class SQLiteUserRepository implements UserRepository {
 
   private readonly db
 

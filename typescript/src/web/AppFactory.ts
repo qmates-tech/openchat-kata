@@ -1,5 +1,5 @@
-import SqlLitePostRepository from "../database/SqlLitePostRepository";
-import SqlLiteUserRepository from "../database/SqlLiteUserRepository";
+import SQLitePostRepository from "../database/SQLitePostRepository";
+import SQLiteUserRepository from "../database/SQLiteUserRepository";
 import PostRepository from "../domain/repositories/PostRepository";
 import UserRepository from "../domain/repositories/UserRepository";
 
@@ -10,14 +10,14 @@ export default class AppFactory {
 
   static getUserRepository(): UserRepository {
     if (!this.userRepositoryInstance)
-      this.userRepositoryInstance = new SqlLiteUserRepository('src/database/production.db')
+      this.userRepositoryInstance = new SQLiteUserRepository('src/database/production.db')
 
     return this.userRepositoryInstance
   }
 
   static getPostRepository(): PostRepository {
     if (!this.postRepositoryInstance)
-      this.postRepositoryInstance = new SqlLitePostRepository('src/database/production.db')
+      this.postRepositoryInstance = new SQLitePostRepository('src/database/production.db')
 
     return this.postRepositoryInstance
   }

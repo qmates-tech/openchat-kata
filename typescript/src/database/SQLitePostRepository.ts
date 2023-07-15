@@ -2,7 +2,7 @@ import Database from 'better-sqlite3';
 import Post from '../domain/entities/Post';
 import PostRepository from "../domain/repositories/PostRepository";
 
-export default class SqlLitePostRepository implements PostRepository {
+export default class SQLitePostRepository implements PostRepository {
 
   private readonly db
 

@@ -1,12 +1,12 @@
 import Database from 'better-sqlite3';
 import 'jest-extended';
-import SqlLiteUserRepository from "../../../src/database/SqlLiteUserRepository";
+import SQLiteUserRepository from "../../../src/database/SQLiteUserRepository";
 import { RegisteredUser, UserToRegister } from "../../../src/domain/entities/User";
 
-describe('SqlLiteUserRepository', () => {
+describe('SQLiteUserRepository', () => {
 
   const sqliteFilename = 'tests/integration/database/integration.test.db'
-  const repository = new SqlLiteUserRepository(sqliteFilename)
+  const repository = new SQLiteUserRepository(sqliteFilename)
 
   beforeEach(() => {
     repository.reset()
