@@ -15,7 +15,8 @@ public class AppFactory {
     }
 
     public static void resetRepositories() {
-        userRepositoryInstance = null;
+        if(userRepositoryInstance != null)
+            userRepositoryInstance.reset();
     }
 
 }

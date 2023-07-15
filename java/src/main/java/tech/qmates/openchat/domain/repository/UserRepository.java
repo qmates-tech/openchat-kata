@@ -8,4 +8,5 @@ public interface UserRepository {
     void store(User user);
     boolean isUsernameAlreadyUsed(String username);
     List<User> getAll();
+    void reset();
 }

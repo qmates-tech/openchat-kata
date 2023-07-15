@@ -25,4 +25,9 @@ public class InMemoryUserRepository implements UserRepository {
     public List<User> getAll() {
         return Collections.unmodifiableList(this.users);
     }
+
+    @Override
+    public void reset() {
+        this.users.clear();
+    }
 }
