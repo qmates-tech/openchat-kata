@@ -30,7 +30,7 @@ public class UsersRouteAcceptanceTest {
 
     @BeforeEach
     void setUp() throws IOException, InterruptedException {
-        httpClient.send(requestBuilderFor("/admin").DELETE().build(), HttpResponse.BodyHandlers.discarding());
+        resetApplication();
     }
 
     @Test
@@ -64,29 +64,20 @@ public class UsersRouteAcceptanceTest {
         String aliceUUID = (String) responseBody.get("id");
         assertDoesNotThrow(() -> UUID.fromString(aliceUUID));
 
-        // ========================================= register another user
+        // ========================================= register some other users
 
-        response = send(requestBuilderFor("/users")
-            .POST(bodyFor(new HashMap<>() {{
-                put("username", "john91");
-                put("password", "pass4321");
-                put("about", "About john user.");
-            }})).build()
-        );
-        assertEquals(201, response.statusCode());
-        responseBody = stringJsonToMap(response.body());
-        String johnUUID = (String) responseBody.get("id");
+        String johnUUID = registerUser("john91", "pass4321", "About john user.");
+        String martinUUID = registerUser("martin85", "pass$$", "About martin user.");
 
         // ========================================= retrieve registered users
 
         HttpRequest retrieveUsersRequest = requestBuilderFor("/users").GET().build();
-
         HttpResponse<String> retrieveUsersResponse = send(retrieveUsersRequest);
 
         assertEquals(200, retrieveUsersResponse.statusCode());
         assertEquals("application/json", retrieveUsersResponse.headers().firstValue("Content-Type").get());
         List<Map<String, Object>> retrieveUsersResponseBody = stringJsonArrayToList(retrieveUsersResponse.body());
-        assertEquals(2, retrieveUsersResponseBody.size());
+        assertEquals(3, retrieveUsersResponseBody.size());
         assertThat(retrieveUsersResponseBody).anySatisfy(userMap -> {
             assertEquals(aliceUUID, userMap.get("id"));
             assertEquals("alice90", userMap.get("username"));
@@ -97,27 +88,45 @@ public class UsersRouteAcceptanceTest {
             assertEquals("john91", userMap.get("username"));
             assertEquals("About john user.", userMap.get("about"));
         });
+        assertThat(retrieveUsersResponseBody).anySatisfy(userMap -> {
+            assertEquals(martinUUID, userMap.get("id"));
+            assertEquals("martin85", userMap.get("username"));
+            assertEquals("About martin user.", userMap.get("about"));
+        });
     }
 
     @Test
     void usernameAlreadyInUse() throws IOException, InterruptedException {
-        HttpResponse<String> firstRegistrationResponse = send(requestBuilderFor("/users")
-            .POST(bodyFor(new HashMap<>() {{
-                put("username", "bob89");
-                put("password", "123pass");
-                put("about", "About bob user.");
-            }})).build());
-        assertEquals(201, firstRegistrationResponse.statusCode());
+        registerUser("bob89", "any", "any");
 
-        HttpResponse<String> secondAttemptResponse = send(requestBuilderFor("/users")
+        HttpResponse<String> secondRegistrationResponse = send(requestBuilderFor("/users")
             .POST(bodyFor(new HashMap<>() {{
                 put("username", "bob89");
                 put("password", "pass123");
                 put("about", "Another about.");
             }})).build());
-        assertEquals(400, secondAttemptResponse.statusCode());
-        assertEquals("text/plain;charset=utf-8", secondAttemptResponse.headers().firstValue("Content-Type").get());
-        assertEquals("Username already in use.", secondAttemptResponse.body());
+        assertEquals(400, secondRegistrationResponse.statusCode());
+        assertEquals("text/plain;charset=utf-8", secondRegistrationResponse.headers().firstValue("Content-Type").get());
+        assertEquals("Username already in use.", secondRegistrationResponse.body());
+    }
+
+    // ***** TODO move function below in some Acceptance Test super class ******
+
+    private String registerUser(String username, String password, String userAbout) throws IOException, InterruptedException {
+        HttpResponse<String> response = send(requestBuilderFor("/users")
+            .POST(bodyFor(new HashMap<>() {{
+                put("username", username);
+                put("password", password);
+                put("about", userAbout);
+            }})).build()
+        );
+        assertEquals(201, response.statusCode());
+        Map<String, Object> responseBody = stringJsonToMap(response.body());
+        return (String) responseBody.get("id");
+    }
+
+    private void resetApplication() throws IOException, InterruptedException {
+        this.httpClient.send(requestBuilderFor("/admin").DELETE().build(), HttpResponse.BodyHandlers.discarding());
     }
 
     private HttpRequest.BodyPublisher bodyFor(Object requestBody) throws JsonProcessingException {
