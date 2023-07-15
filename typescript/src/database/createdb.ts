@@ -14,4 +14,4 @@ const dbSchemaFilename = 'src/database/schema.sql'
 const dbSchemaSql = fs.readFileSync(dbSchemaFilename, 'utf8')
 db.exec(dbSchemaSql)
 
-console.log('Succesfully created!')
+console.log('Successfully created!')
