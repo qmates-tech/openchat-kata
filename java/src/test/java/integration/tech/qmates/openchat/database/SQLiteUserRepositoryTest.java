@@ -12,7 +12,7 @@ import java.net.URL;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SQLiteUserRepositoryTest {
 
@@ -51,6 +51,15 @@ public class SQLiteUserRepositoryTest {
 
         repository.reset();
         assertEquals(0, repository.getAll().size());
+    }
+
+    @Test
+    void recognizesAlreadyUsedUsername() {
+        UserToRegister alice = UserToRegister.newWith("alice90", "pass1234", "About alice user.");
+        repository.store(alice);
+
+        assertTrue(repository.isUsernameAlreadyUsed("alice90"));
+        assertFalse(repository.isUsernameAlreadyUsed("bob89"));
     }
 
     private String getSqliteFilePath() {

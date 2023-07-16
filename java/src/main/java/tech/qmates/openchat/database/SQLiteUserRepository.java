@@ -35,7 +35,16 @@ public class SQLiteUserRepository implements UserRepository {
 
     @Override
     public boolean isUsernameAlreadyUsed(String username) {
-        return false;
+        try (Connection connection = openConnection()) {
+            PreparedStatement query = connection.prepareStatement(
+                "SELECT count(1) as count FROM users WHERE username = ?"
+            );
+            query.setString(1, username);
+            ResultSet resultSet = query.executeQuery();
+            return resultSet.getInt("count") > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
