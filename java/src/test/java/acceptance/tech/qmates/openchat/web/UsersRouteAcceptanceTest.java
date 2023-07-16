@@ -1,4 +1,4 @@
-package acceptance;
+package acceptance.tech.qmates.openchat.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

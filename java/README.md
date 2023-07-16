@@ -28,13 +28,13 @@ $ ./gradlew createProductionDb createTestDb
 To run unit tests:
 
 ```
-$ // todo
+$ ./gradlew test --tests 'acceptance*'
 ```
 
 To run integration tests (remember to create the sqlite database first):
 
 ```
-$ ./gradlew test --tests 'integration.tech.qmates.openchat*'
+$ ./gradlew test --tests 'integration*'
 ```
 
 To run all tests (remember to start the application first with `yarn start`):
