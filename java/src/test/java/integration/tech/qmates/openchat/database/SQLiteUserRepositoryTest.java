@@ -20,7 +20,6 @@ public class SQLiteUserRepositoryTest {
     @Test
     void getUsersFromEmptyRepository() {
         List<RegisteredUser> users = repository.getAll();
-
         assertEquals(0, users.size());
     }
 

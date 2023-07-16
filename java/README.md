@@ -34,7 +34,7 @@ $ // todo
 To run integration tests (remember to create the sqlite database first):
 
 ```
-$ // todo
+$ ./gradlew test --tests 'integration.tech.qmates.openchat*'
 ```
 
 To run all tests (remember to start the application first with `yarn start`):
