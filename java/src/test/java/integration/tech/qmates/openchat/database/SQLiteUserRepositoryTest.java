@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SQLiteUserRepositoryTest {
 
-    UserRepository repository = buildRepository();
+    UserRepository repository = new SQLiteUserRepository(getSqliteFilePath());
 
     @BeforeEach
     void setUp() {
@@ -53,13 +53,13 @@ public class SQLiteUserRepositoryTest {
         assertEquals(0, repository.getAll().size());
     }
 
-    private UserRepository buildRepository() {
+    private String getSqliteFilePath() {
         URL res = getClass().getClassLoader().getResource("integration.test.db");
         if (res == null)
             throw new RuntimeException("Cannot find integration test database file!");
 
         try {
-            return new SQLiteUserRepository(res.toURI().getPath());
+            return res.toURI().getPath();
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
