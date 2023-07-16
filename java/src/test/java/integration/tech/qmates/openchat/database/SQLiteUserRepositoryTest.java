@@ -6,6 +6,7 @@ import tech.qmates.openchat.database.SQLiteUserRepository;
 import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.entity.UserToRegister;
 import tech.qmates.openchat.domain.repository.UserRepository;
+import tech.qmates.openchat.domain.usecase.RegisterUserUseCase;
 
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -60,6 +61,18 @@ public class SQLiteUserRepositoryTest {
 
         assertTrue(repository.isUsernameAlreadyUsed("alice90"));
         assertFalse(repository.isUsernameAlreadyUsed("bob89"));
+    }
+
+    @Test
+    void rejectsAlreadyStoredUuidValueAsId() {
+        UserToRegister alice = UserToRegister.newWith("alice90", "pass1234", "About alice user.");
+        repository.store(alice);
+
+        RuntimeException thrownException = assertThrows(
+            RuntimeException.class,
+            () -> repository.store(alice)
+        );
+        assertEquals("Cannot store user, uuid value already used.", thrownException.getMessage());
     }
 
     private String getSqliteFilePath() {

@@ -1,5 +1,6 @@
 package tech.qmates.openchat.database;
 
+import org.sqlite.SQLiteException;
 import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.entity.UserToRegister;
 import tech.qmates.openchat.domain.repository.UserRepository;
@@ -28,6 +29,9 @@ public class SQLiteUserRepository implements UserRepository {
             query.setString(3, user.password());
             query.setString(4, user.about());
             query.executeUpdate();
+        } catch (SQLiteException e) {
+            if (e.getMessage().startsWith("[SQLITE_CONSTRAINT_PRIMARYKEY]"))
+                throw new RuntimeException("Cannot store user, uuid value already used.", e);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -73,6 +77,8 @@ public class SQLiteUserRepository implements UserRepository {
             throw new RuntimeException(e);
         }
     }
+
+    // ***** TODO move function below in some SQLiteRepository super class ******
 
     private Connection openConnection() throws SQLException {
         return DriverManager.getConnection("jdbc:sqlite:" + sqliteFilepath);
