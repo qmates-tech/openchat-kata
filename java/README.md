@@ -76,3 +76,4 @@ $ ./gradlew tests
 - [ ] move unit tests under a unit folder (?) -> and integration as well
 - [ ] commands to run only unit, integrations, acceptance + readme
 - [ ] docker way readme instructions
+- [ ] let flyway print out executed migrations
