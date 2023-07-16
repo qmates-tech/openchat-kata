@@ -9,6 +9,8 @@ import org.eclipse.jetty.servlet.ServletHandler;
 import tech.qmates.openchat.web.servlets.AdminServlet;
 import tech.qmates.openchat.web.servlets.UsersServlet;
 
+import java.util.Arrays;
+
 public class Main {
 
     public static void main(String[] args) throws Exception {
@@ -27,12 +29,28 @@ public class Main {
     }
 
     private static class OpenChatErrorHandler extends ErrorHandler {
+
         @Override
         public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) {
-            Throwable thrownException = (Throwable) request.getAttribute("jakarta.servlet.error.thrownException");
             System.out.println("Unhandled thrownException occurred!");
-            thrownException.printStackTrace();
+            Throwable thrownException = getThrownException(request);
+            if (thrownException != null)
+                thrownException.printStackTrace();
+
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+
+        private static Throwable getThrownException(HttpServletRequest request) {
+            for (String attribute : Arrays.asList(
+                "jakarta.servlet.error.thrownException",
+                "jakarta.servlet.error.exception"
+            )) {
+                Throwable thrownException = (Throwable) request.getAttribute(attribute);
+                if (thrownException != null)
+                    return thrownException;
+            }
+
+            return null;
         }
     }
 }
