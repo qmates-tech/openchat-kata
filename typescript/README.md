@@ -72,7 +72,7 @@ Here you can execute setup commands normally as described above:
 # yarn ...
 ```
 
-To open a new bash tab in the same container temporary:
+To open a new bash session in the same temporary container:
 
 ```
 $ docker exec -it openchat-backend bash
