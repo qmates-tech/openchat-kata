@@ -47,19 +47,19 @@ describe('SQLiteUserRepository', () => {
     expect(repository.getAll()).toHaveLength(0)
   })
 
+  test('recognizes already used username', () => {
+    const alice: UserToRegister = {
+      id: "046a4497-9fd1-4b89-ad21-fd2d7562c0e0",
+      username: "alice90", password: "any",
+      about: "About alice user."
+    }
+    repository.store(alice)
+
+    expect(repository.isUsernameAlreadyUsed("alice90")).toBeTrue()
+    expect(repository.isUsernameAlreadyUsed("bob88")).toBeFalse()
+  })
+
   describe('store method', () => {
-
-    test('recognizes already used username', () => {
-      const alice: UserToRegister = {
-        id: "046a4497-9fd1-4b89-ad21-fd2d7562c0e0",
-        username: "alice90", password: "any",
-        about: "About alice user."
-      }
-      repository.store(alice)
-
-      expect(repository.isUsernameAlreadyUsed("alice90")).toBeTrue()
-      expect(repository.isUsernameAlreadyUsed("bob88")).toBeFalse()
-    })
 
     test('rejects user storing with invalid uuid as id', () => {
       const invalid: UserToRegister = {
