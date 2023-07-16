@@ -83,7 +83,7 @@ public class SQLiteUserRepositoryTest {
         try {
             return res.toURI().getPath();
         } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Cannot load integration test database file!", e);
         }
     }
 }
