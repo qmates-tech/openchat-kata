@@ -1,5 +1,6 @@
 package integration.tech.qmates.openchat.database;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tech.qmates.openchat.database.SQLiteUserRepository;
 import tech.qmates.openchat.domain.entity.RegisteredUser;
@@ -16,6 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SQLiteUserRepositoryTest {
 
     UserRepository repository = buildRepository();
+
+    @BeforeEach
+    void setUp() {
+        repository.reset();
+    }
 
     @Test
     void getUsersFromEmptyRepository() {
