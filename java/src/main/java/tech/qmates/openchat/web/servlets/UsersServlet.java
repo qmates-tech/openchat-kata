@@ -1,26 +1,22 @@
 package tech.qmates.openchat.web.servlets;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletInputStream;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.eclipse.jetty.http.MimeTypes;
 import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.usecase.GetAllUserUseCase;
 import tech.qmates.openchat.domain.usecase.RegisterUserUseCase;
 import tech.qmates.openchat.web.AppFactory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static jakarta.servlet.http.HttpServletResponse.*;
 
-public class UsersServlet extends HttpServlet {
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
+public class UsersServlet extends BaseOpenChatServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -57,27 +53,4 @@ public class UsersServlet extends HttpServlet {
         }
     }
 
-    private Map<String, Object> stringJsonToMap(ServletInputStream inputStream) throws IOException {
-        //@formatter:off
-        TypeReference<HashMap<String, Object>> targetType = new TypeReference<>() { };
-        return objectMapper.readValue(inputStream, targetType);
-        //@formatter:on
-    }
-
-    private void jsonResponse(
-        int statusCode,
-        Object responseBody,
-        HttpServletResponse response
-    ) throws IOException {
-        String jsonResponseBody = objectMapper.writeValueAsString(responseBody);
-        response.setContentType(MimeTypes.Type.APPLICATION_JSON.toString());
-        response.setStatus(statusCode);
-        response.getWriter().print(jsonResponseBody);
-    }
-
-    private void textResponse(int statusCode, String text, HttpServletResponse response) throws IOException {
-        response.setContentType(MimeTypes.Type.TEXT_PLAIN_UTF_8.toString());
-        response.setStatus(statusCode);
-        response.getWriter().print(text);
-    }
 }
