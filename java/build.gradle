@@ -1,6 +1,8 @@
 plugins {
     id 'java'
+
     id 'application'
+    id 'org.flywaydb.flyway' version '9.19.0'
 }
 
 group = 'tech.qmates'
@@ -29,6 +31,14 @@ test {
     useJUnitPlatform()
     testLogging.events "passed", "skipped", "failed"
     outputs.upToDateWhen { false }
+}
+
+task createProductionDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    url = "jdbc:sqlite:${project.projectDir}/src/main/resources/production.db"
+}
+
+task createTestDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    url = "jdbc:sqlite:${project.projectDir}/src/test/resources/integration.test.db"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
