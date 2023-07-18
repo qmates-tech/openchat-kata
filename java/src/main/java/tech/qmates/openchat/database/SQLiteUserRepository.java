@@ -1,10 +1,13 @@
 package tech.qmates.openchat.database;
 
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
 import org.sqlite.SQLiteException;
 import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.entity.UserToRegister;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +29,7 @@ public class SQLiteUserRepository implements UserRepository {
             );
             query.setString(1, user.uuid().toString());
             query.setString(2, user.username());
-            query.setString(3, user.password());
+            query.setString(3, sha256Of(user.password()));
             query.setString(4, user.about());
             query.executeUpdate();
         } catch (SQLiteException e) {
@@ -76,6 +79,11 @@ public class SQLiteUserRepository implements UserRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static String sha256Of(String password) {
+        HashCode hashCode = Hashing.sha256().hashString(password, StandardCharsets.UTF_8);
+        return hashCode.toString();
     }
 
     // ***** TODO move function below in some SQLiteRepository super class ******

@@ -6,11 +6,15 @@ import tech.qmates.openchat.database.SQLiteUserRepository;
 import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.entity.UserToRegister;
 import tech.qmates.openchat.domain.repository.UserRepository;
-import tech.qmates.openchat.domain.usecase.RegisterUserUseCase;
 
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,6 +77,23 @@ public class SQLiteUserRepositoryTest {
             () -> repository.store(alice)
         );
         assertEquals("Cannot store user, uuid value already used.", thrownException.getMessage());
+    }
+
+    @Test
+    void passwordAreStoredHashedInSha256() throws SQLException {
+        UserToRegister alice = UserToRegister.newWith("alice90", "notcryptedpassword", "About alice user.");
+        repository.store(alice);
+
+        String storedPassword = getStoredPasswordFromDatabaseForUserId(alice.uuid());
+        String expected = "0e667c78b4d937db64bfefbcb572e66095a1c2a41a948b519e52b09638819127"; // sha256 of notcryptedpassword
+        assertEquals(expected, storedPassword);
+    }
+
+    private String getStoredPasswordFromDatabaseForUserId(UUID uuid) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:sqlite:" + getSqliteFilePath());
+        PreparedStatement query = connection.prepareStatement("SELECT password FROM users WHERE id = ?");
+        query.setString(1, uuid.toString());
+        return query.executeQuery().getString("password");
     }
 
     private String getSqliteFilePath() {

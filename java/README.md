@@ -72,4 +72,5 @@ $ docker exec -it openchat-backend bash
 - [x] move unit tests under a unit folder (?) -> and integration as well
 - [x] commands to run only unit, integrations, acceptance + readme
 - [x] docker way readme instructions
+- [x] store password as sha256 in db
 - [ ] let flyway print out executed migrations
