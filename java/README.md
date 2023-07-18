@@ -28,7 +28,7 @@ $ ./gradlew createProductionDb createTestDb
 To run unit tests:
 
 ```
-$ ./gradlew test --tests 'tech.qmates*'
+$ ./gradlew test --tests 'unit*'
 ```
 
 To run integration tests (remember to create the sqlite database first):
@@ -69,7 +69,7 @@ $ docker exec -it openchat-backend bash
 
 ## TODO
 
-- [ ] move unit tests under a unit folder (?) -> and integration as well
+- [x] move unit tests under a unit folder (?) -> and integration as well
 - [x] commands to run only unit, integrations, acceptance + readme
 - [x] docker way readme instructions
 - [ ] let flyway print out executed migrations

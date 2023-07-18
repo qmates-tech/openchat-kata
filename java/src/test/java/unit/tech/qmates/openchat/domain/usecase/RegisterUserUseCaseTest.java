@@ -1,7 +1,8 @@
-package tech.qmates.openchat.domain.usecase;
+package unit.tech.qmates.openchat.domain.usecase;
 
 import org.junit.jupiter.api.Test;
 import tech.qmates.openchat.domain.repository.UserRepository;
+import tech.qmates.openchat.domain.usecase.RegisterUserUseCase;
 import tech.qmates.openchat.domain.usecase.RegisterUserUseCase.UsernameAlreadyInUseException;
 
 import static org.junit.jupiter.api.Assertions.*;
