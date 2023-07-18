@@ -33,11 +33,13 @@ test {
     outputs.upToDateWhen { false }
 }
 
-task createProductionDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+import org.flywaydb.gradle.task.FlywayMigrateTask
+
+tasks.register('createProductionDb', FlywayMigrateTask) {
     url = "jdbc:sqlite:${project.projectDir}/src/main/resources/production.db"
 }
 
-task createTestDb(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+tasks.register('createTestDb', FlywayMigrateTask) {
     url = "jdbc:sqlite:${project.projectDir}/src/test/resources/integration.test.db"
 }
 
