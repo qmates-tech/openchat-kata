@@ -28,7 +28,7 @@ $ ./gradlew createProductionDb createTestDb
 To run unit tests:
 
 ```
-$ ./gradlew test --tests 'acceptance*'
+$ ./gradlew test --tests 'tech.qmates*'
 ```
 
 To run integration tests (remember to create the sqlite database first):
