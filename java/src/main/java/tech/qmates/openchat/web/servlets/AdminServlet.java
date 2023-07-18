@@ -4,10 +4,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import tech.qmates.openchat.web.AppFactory;
 
-public class AdminServlet extends BaseOpenChatServlet {
+public class AdminServlet {
 
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
+    public void handleDelete(HttpServletRequest request, HttpServletResponse response) {
         AppFactory.resetRepositories();
     }
 
