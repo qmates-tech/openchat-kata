@@ -8,7 +8,6 @@ public class AdminServlet extends BaseOpenChatServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("!! Resetting repositories !!");
         AppFactory.resetRepositories();
     }
 
