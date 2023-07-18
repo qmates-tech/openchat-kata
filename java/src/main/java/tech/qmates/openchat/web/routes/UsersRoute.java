@@ -18,6 +18,7 @@ import static jakarta.servlet.http.HttpServletResponse.*;
 
 public class UsersRoute extends BaseRoute {
 
+    @Override
     public void handleGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         GetAllUserUseCase usecase = new GetAllUserUseCase(AppFactory.getUserRepository());
         List<RegisteredUser> users = usecase.run();
@@ -31,6 +32,7 @@ public class UsersRoute extends BaseRoute {
         jsonResponse(SC_OK, listOfMapUsers, response);
     }
 
+    @Override
     public void handlePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, Object> requestBody = stringJsonToMap(request.getInputStream());
         String username = (String) requestBody.get("username");

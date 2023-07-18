@@ -14,6 +14,7 @@ import static jakarta.servlet.http.HttpServletResponse.*;
 
 public class TimelineRoute extends BaseRoute {
 
+    @Override
     public void handleGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // TODO complete
         textResponse(SC_NOT_FOUND, "User not found.", response);

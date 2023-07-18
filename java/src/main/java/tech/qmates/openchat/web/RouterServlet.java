@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.MimeTypes;
 import tech.qmates.openchat.web.routes.AdminRoute;
+import tech.qmates.openchat.web.routes.BaseRoute;
 import tech.qmates.openchat.web.routes.TimelineRoute;
 import tech.qmates.openchat.web.routes.UsersRoute;
 
@@ -15,40 +16,34 @@ public class RouterServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String requestURI = request.getRequestURI();
-        String httpMethod = request.getMethod();
+        BaseRoute route = chooseRoute(requestURI);
 
-        if (requestURI.equals("/users")) {
-            UsersRoute route = new UsersRoute();
-            //@formatter:off
-            switch (httpMethod) {
-                case "GET": route.handleGet(request, response); return;
-                case "POST": route.handlePost(request, response); return;
-                default: httpMethodNotAllowedResponse(request, response); return;
-            }
-            //@formatter:on
+        if(route == null) {
+            textResponse(404, "Route not found!", response);
+            return;
         }
 
-        if (requestURI.equals("/users/unexisting/timeline")) {
-            TimelineRoute route = new TimelineRoute();
-            //@formatter:off
-            switch (httpMethod) {
-                case "GET": route.handleGet(request, response); return;
-                default: httpMethodNotAllowedResponse(request, response); return;
-            }
-            //@formatter:on
+        //@formatter:off
+        switch (request.getMethod()) {
+            case "GET": route.handleGet(request, response); return;
+            case "POST": route.handlePost(request, response); return;
+            case "DELETE": route.handleDelete(request, response); return;
+            default: httpMethodNotAllowedResponse(request, response);
         }
+        //@formatter:on
+    }
 
-        if (requestURI.equals("/admin")) {
-            AdminRoute route = new AdminRoute();
-            //@formatter:off
-            switch (httpMethod) {
-                case "DELETE": route.handleDelete(request, response); return;
-                default: httpMethodNotAllowedResponse(request, response); return;
-            }
-            //@formatter:on
-        }
+    private static BaseRoute chooseRoute(String requestURI) {
+        if (requestURI.equals("/users"))
+            return new UsersRoute();
 
-        textResponse(404, "Route not found!", response);
+        if (requestURI.equals("/users/unexisting/timeline"))
+            return new TimelineRoute();
+
+        if (requestURI.equals("/admin"))
+            return new AdminRoute();
+
+        return null;
     }
 
     private void httpMethodNotAllowedResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {

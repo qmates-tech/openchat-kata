@@ -3,6 +3,7 @@ package tech.qmates.openchat.web.routes;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.MimeTypes;
 
@@ -36,11 +37,27 @@ public abstract class BaseRoute {
         response.setStatus(statusCode);
     }
 
+    protected void methodNotAllowedResponse(String method, HttpServletResponse response) throws IOException {
+        textResponse(405, "Method " + method + " not allowed!", response);
+    }
+
     protected Map<String, Object> stringJsonToMap(ServletInputStream inputStream) throws IOException {
         //@formatter:off
         TypeReference<HashMap<String, Object>> targetType = new TypeReference<>() { };
         return objectMapper.readValue(inputStream, targetType);
         //@formatter:on
+    }
+
+    public void handleDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        methodNotAllowedResponse(request.getMethod(), response);
+    }
+
+    public void handleGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        methodNotAllowedResponse(request.getMethod(), response);
+    }
+
+    public void handlePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        methodNotAllowedResponse(request.getMethod(), response);
     }
 
 }
