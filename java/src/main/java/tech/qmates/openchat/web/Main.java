@@ -2,7 +2,6 @@ package tech.qmates.openchat.web;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
-import tech.qmates.openchat.web.servlets.RouterServlet;
 
 public class Main {
 

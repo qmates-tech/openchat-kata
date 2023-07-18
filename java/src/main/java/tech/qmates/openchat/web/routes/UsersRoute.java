@@ -1,11 +1,7 @@
-package tech.qmates.openchat.web.servlets;
+package tech.qmates.openchat.web.routes;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.eclipse.jetty.http.MimeTypes;
 import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.usecase.GetAllUserUseCase;
 import tech.qmates.openchat.domain.usecase.RegisterUserUseCase;
@@ -20,9 +16,7 @@ import java.util.stream.Collectors;
 
 import static jakarta.servlet.http.HttpServletResponse.*;
 
-public class UsersServlet {
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
+public class UsersRoute extends BaseRoute {
 
     public void handleGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         GetAllUserUseCase usecase = new GetAllUserUseCase(AppFactory.getUserRepository());
@@ -55,30 +49,6 @@ public class UsersServlet {
         } catch (RegisterUserUseCase.UsernameAlreadyInUseException e) {
             textResponse(SC_BAD_REQUEST, "Username already in use.", response);
         }
-    }
-
-    protected Map<String, Object> stringJsonToMap(ServletInputStream inputStream) throws IOException {
-        //@formatter:off
-        TypeReference<HashMap<String, Object>> targetType = new TypeReference<>() { };
-        return objectMapper.readValue(inputStream, targetType);
-        //@formatter:on
-    }
-
-    protected void jsonResponse(
-        int statusCode,
-        Object responseBody,
-        HttpServletResponse response
-    ) throws IOException {
-        String jsonResponseBody = objectMapper.writeValueAsString(responseBody);
-        response.setContentType(MimeTypes.Type.APPLICATION_JSON.toString());
-        response.setStatus(statusCode);
-        response.getWriter().print(jsonResponseBody);
-    }
-
-    protected void textResponse(int statusCode, String text, HttpServletResponse response) throws IOException {
-        response.setContentType(MimeTypes.Type.TEXT_PLAIN_UTF_8.toString());
-        response.setStatus(statusCode);
-        response.getWriter().print(text);
     }
 
 }
