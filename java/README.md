@@ -50,7 +50,7 @@ If you do not have java installed in you machine, everything can be executed in 
 Start the temporary container on bash with:
 
 ```
-$ docker run --rm -it -p 8000:8000 -v $PWD:/app -w /app --name openchat-backend java:todo bash
+$ docker run --rm -it -p 8000:8000 -v $PWD:/app -w /app --name openchat-backend openjdk:18.0-slim bash
 root@620af4e91dbf:/app#
 ```
 
@@ -67,13 +67,9 @@ To open a new bash session in the same temporary container:
 $ docker exec -it openchat-backend bash
 ```
 
-```
-$ ./gradlew tests
-```
-
 ## TODO
 
 - [ ] move unit tests under a unit folder (?) -> and integration as well
-- [ ] commands to run only unit, integrations, acceptance + readme
-- [ ] docker way readme instructions
+- [x] commands to run only unit, integrations, acceptance + readme
+- [x] docker way readme instructions
 - [ ] let flyway print out executed migrations
