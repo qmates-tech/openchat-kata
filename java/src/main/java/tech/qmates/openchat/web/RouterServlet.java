@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.MimeTypes;
 import tech.qmates.openchat.web.routes.AdminRoute;
+import tech.qmates.openchat.web.routes.TimelineRoute;
 import tech.qmates.openchat.web.routes.UsersRoute;
 
 import java.io.IOException;
@@ -22,6 +23,16 @@ public class RouterServlet extends HttpServlet {
             switch (httpMethod) {
                 case "GET": route.handleGet(request, response); return;
                 case "POST": route.handlePost(request, response); return;
+                default: httpMethodNotAllowedResponse(request, response); return;
+            }
+            //@formatter:on
+        }
+
+        if (requestURI.equals("/users/unexisting/timeline")) {
+            TimelineRoute route = new TimelineRoute();
+            //@formatter:off
+            switch (httpMethod) {
+                case "GET": route.handleGet(request, response); return;
                 default: httpMethodNotAllowedResponse(request, response); return;
             }
             //@formatter:on
