@@ -2,9 +2,11 @@ package tech.qmates.openchat.web.routes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import tech.qmates.openchat.domain.usecase.GetTimelineUseCase;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,7 +20,9 @@ public class TimelineRoute extends BaseRoute {
     public void handleGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             UUID userUUID = extractUserIdFromRequestURI(request);
-            jsonResponse(SC_OK, Collections.emptyList(), response);
+            GetTimelineUseCase usecase = new GetTimelineUseCase();
+            List<Object> posts = usecase.run(userUUID);
+            jsonResponse(SC_OK, posts, response);
         } catch (IllegalArgumentException ex) {
             textResponse(SC_NOT_FOUND, "User not found.", response);
         }
