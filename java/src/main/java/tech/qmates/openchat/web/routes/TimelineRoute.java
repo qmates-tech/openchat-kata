@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,22 +16,21 @@ public class TimelineRoute extends BaseRoute {
 
     @Override
     public void handleGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String userUUID = extractUserIdFromRequestURI(request);
-        if (userUUID.equals("unexisting")) {
+        try {
+            UUID userUUID = extractUserIdFromRequestURI(request);
+            jsonResponse(SC_OK, Collections.emptyList(), response);
+        } catch (IllegalArgumentException ex) {
             textResponse(SC_NOT_FOUND, "User not found.", response);
-            return;
         }
-
-        jsonResponse(SC_OK, Collections.emptyList(), response);
     }
 
-    private static String extractUserIdFromRequestURI(HttpServletRequest request) {
+    private static UUID extractUserIdFromRequestURI(HttpServletRequest request) {
         Pattern pathRegex = Pattern.compile("^/users/(.+)/timeline");
         Matcher matcher = pathRegex.matcher(request.getRequestURI());
         if (!matcher.matches() || matcher.groupCount() < 1)
             throw new RuntimeException("Request URI " + request.getRequestURI() + " do not match expected format!");
 
-        return matcher.group(1);
+        return UUID.fromString(matcher.group(1));
     }
 
 }
