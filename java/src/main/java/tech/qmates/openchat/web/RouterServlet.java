@@ -37,7 +37,7 @@ public class RouterServlet extends HttpServlet {
         if (requestURI.equals("/users"))
             return new UsersRoute();
 
-        if (requestURI.matches("/users/.+/timeline"))
+        if (requestURI.matches("^/users/.+/timeline"))
             return new TimelineRoute();
 
         if (requestURI.equals("/admin"))
