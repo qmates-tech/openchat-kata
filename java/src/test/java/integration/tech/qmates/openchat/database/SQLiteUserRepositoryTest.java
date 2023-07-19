@@ -89,6 +89,22 @@ public class SQLiteUserRepositoryTest {
         assertEquals(expected, storedPassword);
     }
 
+    @Test
+    void getUserByIdReturnsNullWithoutUsers() {
+        assertNull(repository.getUserById(UUID.randomUUID()));
+    }
+
+    @Test
+    void getUserByIdSuccessCase() {
+        UserToRegister alice = UserToRegister.newWith("alice90", "notcryptedpassword", "About alice user.");
+        repository.store(alice);
+
+        RegisteredUser userFromDb = repository.getUserById(alice.uuid());
+
+        RegisteredUser expected = new RegisteredUser(alice.uuid(), "alice90", "About alice user.");
+        assertEquals(expected, userFromDb);
+    }
+
     private String getStoredPasswordFromDatabaseForUserId(UUID uuid) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:sqlite:" + getSqliteFilePath());
         PreparedStatement query = connection.prepareStatement("SELECT password FROM users WHERE id = ?");

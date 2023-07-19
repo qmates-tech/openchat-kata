@@ -72,6 +72,25 @@ public class SQLiteUserRepository implements UserRepository {
     }
 
     @Override
+    public RegisteredUser getUserById(UUID uuid) {
+        try (Connection connection = openConnection()) {
+            PreparedStatement query = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
+            query.setString(1, uuid.toString());
+            ResultSet resultSet = query.executeQuery();
+            if (!resultSet.next())
+                return null;
+
+            return new RegisteredUser(
+                UUID.fromString(resultSet.getString("id")),
+                resultSet.getString("username"),
+                resultSet.getString("about")
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void reset() {
         try (Connection connection = openConnection()) {
             Statement query = connection.createStatement();
