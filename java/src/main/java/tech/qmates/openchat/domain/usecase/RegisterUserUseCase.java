@@ -17,7 +17,7 @@ public class RegisterUserUseCase {
         if(userRepository.isUsernameAlreadyUsed(username))
             throw new UsernameAlreadyInUseException(username);
 
-        UserToRegister userToBeStored = UserToRegister.newWith(username, password, about);
+        UserToRegister userToBeStored = new UserToRegister(UUID.randomUUID(), username, password, about);
         this.userRepository.store(userToBeStored);
         return userToBeStored.uuid();
     }

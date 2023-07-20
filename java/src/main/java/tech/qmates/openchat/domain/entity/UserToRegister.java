@@ -10,11 +10,7 @@ public class UserToRegister {
     private final String password;
     private final String about;
 
-    public static UserToRegister newWith(String username, String password, String about) {
-        return new UserToRegister(UUID.randomUUID(), username, password, about);
-    }
-
-    private UserToRegister(UUID uuid, String username, String password, String about) {
+    public UserToRegister(UUID uuid, String username, String password, String about) {
         this.uuid = uuid;
         this.username = username;
         this.password = password;

@@ -36,8 +36,8 @@ public class SQLiteUserRepositoryTest {
 
     @Test
     void fillGetAllAndResetRepository() {
-        UserToRegister alice = UserToRegister.newWith("alice90", "pass1234", "About alice user.");
-        UserToRegister bob = UserToRegister.newWith("bob89", "123pass", "About bob user.");
+        UserToRegister alice = newUserWith("alice90", "pass1234", "About alice user.");
+        UserToRegister bob = newUserWith("bob89", "123pass", "About bob user.");
         repository.store(alice);
         repository.store(bob);
 
@@ -60,7 +60,7 @@ public class SQLiteUserRepositoryTest {
 
     @Test
     void recognizesAlreadyUsedUsername() {
-        UserToRegister alice = UserToRegister.newWith("alice90", "pass1234", "About alice user.");
+        UserToRegister alice = newUserWith("alice90");
         repository.store(alice);
 
         assertTrue(repository.isUsernameAlreadyUsed("alice90"));
@@ -69,7 +69,7 @@ public class SQLiteUserRepositoryTest {
 
     @Test
     void rejectsAlreadyStoredUuidValueAsId() {
-        UserToRegister alice = UserToRegister.newWith("alice90", "pass1234", "About alice user.");
+        UserToRegister alice = newUserWith("any");
         repository.store(alice);
 
         RuntimeException thrownException = assertThrows(
@@ -81,7 +81,7 @@ public class SQLiteUserRepositoryTest {
 
     @Test
     void passwordAreStoredHashedInSha256() throws SQLException {
-        UserToRegister alice = UserToRegister.newWith("alice90", "notcryptedpassword", "About alice user.");
+        UserToRegister alice = newUserWith("any", "notcryptedpassword");
         repository.store(alice);
 
         String storedPassword = getStoredPasswordFromDatabaseForUserId(alice.uuid());
@@ -96,12 +96,13 @@ public class SQLiteUserRepositoryTest {
 
     @Test
     void getUserByIdSuccessCase() {
-        UserToRegister alice = UserToRegister.newWith("alice90", "notcryptedpassword", "About alice user.");
+        UUID aliceUUID = UUID.randomUUID();
+        UserToRegister alice = new UserToRegister(aliceUUID, "alice90", "any", "About alice user.");
         repository.store(alice);
 
         RegisteredUser userFromDb = repository.getUserById(alice.uuid());
 
-        RegisteredUser expected = new RegisteredUser(alice.uuid(), "alice90", "About alice user.");
+        RegisteredUser expected = new RegisteredUser(aliceUUID, "alice90", "About alice user.");
         assertEquals(expected, userFromDb);
     }
 
@@ -123,4 +124,17 @@ public class SQLiteUserRepositoryTest {
             throw new RuntimeException("Cannot load integration test database file!", e);
         }
     }
+
+    public UserToRegister newUserWith(String username) {
+        return newUserWith(username, "any");
+    }
+
+    private UserToRegister newUserWith(String username, String password) {
+        return newUserWith(username, password, "any");
+    }
+
+    public UserToRegister newUserWith(String username, String password, String about) {
+        return new UserToRegister(UUID.randomUUID(), username, password, about);
+    }
+
 }
