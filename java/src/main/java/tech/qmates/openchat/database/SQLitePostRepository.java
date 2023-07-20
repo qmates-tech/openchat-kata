@@ -1,5 +1,6 @@
 package tech.qmates.openchat.database;
 
+import org.sqlite.SQLiteException;
 import tech.qmates.openchat.domain.entity.Post;
 import tech.qmates.openchat.domain.repository.PostRepository;
 
@@ -26,6 +27,9 @@ public class SQLitePostRepository extends SQLiteRepository implements PostReposi
             query.setString(3, post.text());
             query.setString(4, serializeDateTime(post.dateTime()));
             query.executeUpdate();
+        } catch (SQLiteException e) {
+            if (e.getMessage().startsWith("[SQLITE_CONSTRAINT_PRIMARYKEY]"))
+                throw new RuntimeException("Cannot store post, id value already used.", e);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -18,8 +18,7 @@ import java.util.SimpleTimeZone;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SQLitePostRepositoryTest extends SQLiteRepositoryTest {
 
@@ -58,5 +57,16 @@ class SQLitePostRepositoryTest extends SQLiteRepositoryTest {
         assertEquals(expected.toEpochSecond(), postDatetime.toEpochSecond());
     }
 
-    // cannot store already used post id
+    @Test
+    void cannotStoreAlreadyUsedPostId() {
+        Post post = new Post(UUID.randomUUID(), UUID.randomUUID(), "any", ZonedDateTime.now());
+        repository.store(post);
+
+        RuntimeException thrownException = assertThrows(
+            RuntimeException.class,
+            () -> repository.store(post)
+        );
+        assertEquals("Cannot store post, id value already used.", thrownException.getMessage());
+    }
+
 }
