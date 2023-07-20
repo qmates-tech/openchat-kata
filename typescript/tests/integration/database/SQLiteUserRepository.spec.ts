@@ -104,7 +104,7 @@ describe('SQLiteUserRepository', () => {
         .prepare('SELECT password FROM users WHERE id = ?')
         .get('61c4b7ff-d738-4f18-9a15-1d6e3c051867')
       expect(selectResult.password)
-        .toBe('0e667c78b4d937db64bfefbcb572e66095a1c2a41a948b519e52b09638819127'); // sha256
+        .toBe('0e667c78b4d937db64bfefbcb572e66095a1c2a41a948b519e52b09638819127'); // sha256 of notcryptedpassword
     })
 
   })
