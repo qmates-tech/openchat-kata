@@ -27,16 +27,17 @@ class SQLitePostRepositoryTest extends SQLiteRepositoryTest {
     }
 
     @Test
-    void storePostAndGetAllByUser() {
+    void storeSinglePostAndGetAllByUser() {
         UUID postAuthorUserId = UUID.randomUUID();
-        ZonedDateTime postDatetime = ZonedDateTime.of(LocalDateTime.of(2023, Month.JULY, 20, 11, 49, 19), ZoneId.of("UTC"));
-        Post toStore = new Post(UUID.randomUUID(), postAuthorUserId, "Text of the post.", postDatetime);
+        ZonedDateTime postDateTime = ZonedDateTime.now(ZoneId.of("UTC")).withNano(0);
+        Post toStore = new Post(UUID.randomUUID(), postAuthorUserId, "Text of the post.", postDateTime);
 
         repository.store(toStore);
         Set<Post> allByUser = repository.getAllByUser(postAuthorUserId);
 
         assertThat(allByUser).hasSize(1);
-        assertEquals(toStore, allByUser.iterator().next());
+        Post first = allByUser.iterator().next();
+        assertEquals(toStore, first);
     }
 
     @Test
