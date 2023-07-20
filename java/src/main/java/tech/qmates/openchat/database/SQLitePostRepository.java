@@ -58,8 +58,8 @@ public class SQLitePostRepository extends SQLiteRepository implements PostReposi
     }
 
     private static String serializeDateTime(ZonedDateTime zonedDateTime) {
-        // should be converted in UTC first ! test it
-        return zonedDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        ZonedDateTime utcDateTime = zonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+        return utcDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     private ZonedDateTime deserializeDateTime(Timestamp timestamp) {

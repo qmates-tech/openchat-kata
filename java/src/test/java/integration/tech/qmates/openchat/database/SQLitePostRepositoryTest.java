@@ -43,6 +43,20 @@ class SQLitePostRepositoryTest extends SQLiteRepositoryTest {
         assertEquals(toStore, allByUser.iterator().next());
     }
 
+    @Test
+    void dateTimesAreStoredInUTCProperlyConvertedToSameInstant() {
+        UUID userId = UUID.randomUUID();
+        ZonedDateTime postDatetime = ZonedDateTime.of(LocalDateTime.of(2023, Month.JULY, 20, 11, 49, 19), ZoneId.of("Europe/Rome"));
+        Post toStore = new Post(UUID.randomUUID(), userId, "any", postDatetime);
+
+        repository.store(toStore);
+        Post storedPost = repository.getAllByUser(userId).iterator().next();
+
+        ZonedDateTime expected = ZonedDateTime.of(LocalDateTime.of(2023, Month.JULY, 20, 9, 49, 19), ZoneId.of("UTC"));
+        assertEquals(expected, storedPost.dateTime());
+        assertEquals(expected.toInstant(), postDatetime.toInstant());
+        assertEquals(expected.toEpochSecond(), postDatetime.toEpochSecond());
+    }
+
     // cannot store already used post id
-    // datetime store is timezone safe
 }
