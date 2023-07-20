@@ -8,10 +8,7 @@ import tech.qmates.openchat.domain.usecase.RegisterUserUseCase;
 import tech.qmates.openchat.web.AppFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static jakarta.servlet.http.HttpServletResponse.*;
@@ -21,7 +18,7 @@ public class UsersRoute extends BaseRoute {
     @Override
     public void handleGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         GetAllUserUseCase usecase = new GetAllUserUseCase(AppFactory.getUserRepository());
-        List<RegisteredUser> users = usecase.run();
+        Set<RegisteredUser> users = usecase.run();
         List<HashMap<String, Object>> listOfMapUsers = users.stream()
             .map(user -> new HashMap<String, Object>() {{
                 put("id", user.uuid().toString());

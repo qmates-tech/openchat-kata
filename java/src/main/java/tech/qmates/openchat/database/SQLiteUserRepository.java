@@ -9,9 +9,7 @@ import tech.qmates.openchat.domain.repository.UserRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class SQLiteUserRepository implements UserRepository {
 
@@ -55,7 +53,7 @@ public class SQLiteUserRepository implements UserRepository {
     }
 
     @Override
-    public List<RegisteredUser> getAll() {
+    public Set<RegisteredUser> getAll() {
         try (Connection connection = openConnection()) {
             Statement query = connection.createStatement();
             ResultSet resultSet = query.executeQuery("SELECT * FROM users");
@@ -111,8 +109,8 @@ public class SQLiteUserRepository implements UserRepository {
         return DriverManager.getConnection("jdbc:sqlite:" + sqliteFilepath);
     }
 
-    private <T> List<T> mapResultSet(ResultSetMapper<T> mapFunction, ResultSet resultSet) throws SQLException {
-        List<T> result = new ArrayList<>();
+    private <T> Set<T> mapResultSet(ResultSetMapper<T> mapFunction, ResultSet resultSet) throws SQLException {
+        Set<T> result = new HashSet<>();
         while (resultSet.next()) {
             T mapped = mapFunction.apply(resultSet);
             result.add(mapped);

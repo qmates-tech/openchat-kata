@@ -13,7 +13,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +30,7 @@ public class SQLiteUserRepositoryTest {
 
     @Test
     void getUsersFromEmptyRepository() {
-        List<RegisteredUser> users = repository.getAll();
+        Set<RegisteredUser> users = repository.getAll();
         assertEquals(0, users.size());
     }
 
@@ -41,7 +41,7 @@ public class SQLiteUserRepositoryTest {
         repository.store(alice);
         repository.store(bob);
 
-        List<RegisteredUser> users = repository.getAll();
+        Set<RegisteredUser> users = repository.getAll();
         assertEquals(2, users.size());
         assertThat(users).anySatisfy(user -> {
             assertEquals(alice.uuid(), user.uuid());
