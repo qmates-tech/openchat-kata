@@ -9,17 +9,15 @@ import tech.qmates.openchat.domain.repository.UserRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
-import java.util.*;
+import java.util.Set;
+import java.util.UUID;
 
-public class SQLiteUserRepository implements UserRepository {
-
-    private final String sqliteFilepath;
+public class SQLiteUserRepository extends SQLiteRepository implements UserRepository {
 
     public SQLiteUserRepository(String sqliteFilepath) {
-        this.sqliteFilepath = sqliteFilepath;
+        super(sqliteFilepath);
     }
 
-    @Override
     public void store(UserToRegister user) {
         try (Connection connection = openConnection()) {
             PreparedStatement query = connection.prepareStatement(
@@ -38,7 +36,6 @@ public class SQLiteUserRepository implements UserRepository {
         }
     }
 
-    @Override
     public boolean isUsernameAlreadyUsed(String username) {
         try (Connection connection = openConnection()) {
             PreparedStatement query = connection.prepareStatement(
@@ -52,7 +49,6 @@ public class SQLiteUserRepository implements UserRepository {
         }
     }
 
-    @Override
     public Set<RegisteredUser> getAll() {
         try (Connection connection = openConnection()) {
             Statement query = connection.createStatement();
@@ -69,7 +65,6 @@ public class SQLiteUserRepository implements UserRepository {
         }
     }
 
-    @Override
     public RegisteredUser getUserById(UUID uuid) {
         try (Connection connection = openConnection()) {
             PreparedStatement query = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
@@ -88,7 +83,6 @@ public class SQLiteUserRepository implements UserRepository {
         }
     }
 
-    @Override
     public void reset() {
         try (Connection connection = openConnection()) {
             Statement query = connection.createStatement();
@@ -103,24 +97,5 @@ public class SQLiteUserRepository implements UserRepository {
         return hashCode.toString();
     }
 
-    // ***** TODO move function below in some SQLiteRepository super class ******
-
-    private Connection openConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:sqlite:" + sqliteFilepath);
-    }
-
-    private <T> Set<T> mapResultSet(ResultSetMapper<T> mapFunction, ResultSet resultSet) throws SQLException {
-        Set<T> result = new HashSet<>();
-        while (resultSet.next()) {
-            T mapped = mapFunction.apply(resultSet);
-            result.add(mapped);
-        }
-        return result;
-    }
-
-    @FunctionalInterface
-    interface ResultSetMapper<R> {
-        R apply(ResultSet t) throws SQLException;
-    }
 
 }

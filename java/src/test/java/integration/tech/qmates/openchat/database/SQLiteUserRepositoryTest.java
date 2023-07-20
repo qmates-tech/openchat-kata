@@ -7,8 +7,6 @@ import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.entity.UserToRegister;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,7 +17,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SQLiteUserRepositoryTest {
+public class SQLiteUserRepositoryTest extends SQLiteRepositoryTest {
 
     UserRepository repository = new SQLiteUserRepository(getSqliteFilePath());
 
@@ -111,18 +109,6 @@ public class SQLiteUserRepositoryTest {
         PreparedStatement query = connection.prepareStatement("SELECT password FROM users WHERE id = ?");
         query.setString(1, uuid.toString());
         return query.executeQuery().getString("password");
-    }
-
-    private String getSqliteFilePath() {
-        URL res = getClass().getClassLoader().getResource("integration.test.db");
-        if (res == null)
-            throw new RuntimeException("Cannot find integration test database file!");
-
-        try {
-            return res.toURI().getPath();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Cannot load integration test database file!", e);
-        }
     }
 
     public UserToRegister newUserWith(String username) {
