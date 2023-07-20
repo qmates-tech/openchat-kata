@@ -88,12 +88,7 @@ public class SQLiteUserRepositoryTest extends SQLiteRepositoryTest {
     }
 
     @Test
-    void getUserByIdReturnsNullWithoutUsers() {
-        assertNull(repository.getUserById(UUID.randomUUID()));
-    }
-
-    @Test
-    void getUserByIdSuccessCase() {
+    void getExistingUserById() {
         UUID aliceUUID = UUID.randomUUID();
         UserToRegister alice = new UserToRegister(aliceUUID, "alice90", "any", "About alice user.");
         repository.store(alice);
@@ -102,6 +97,11 @@ public class SQLiteUserRepositoryTest extends SQLiteRepositoryTest {
 
         RegisteredUser expected = new RegisteredUser(aliceUUID, "alice90", "About alice user.");
         assertEquals(expected, userFromDb);
+    }
+
+    @Test
+    void getUserByIdReturnsNullWithoutUsers() {
+        assertNull(repository.getUserById(UUID.randomUUID()));
     }
 
     private String getStoredPasswordFromDatabaseForUserId(UUID uuid) throws SQLException {

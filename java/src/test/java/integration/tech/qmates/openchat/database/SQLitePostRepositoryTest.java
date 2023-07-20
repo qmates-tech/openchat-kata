@@ -2,23 +2,20 @@ package integration.tech.qmates.openchat.database;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.CollectionUtils;
 import tech.qmates.openchat.database.SQLitePostRepository;
-import tech.qmates.openchat.database.SQLiteUserRepository;
 import tech.qmates.openchat.domain.entity.Post;
 import tech.qmates.openchat.domain.repository.PostRepository;
-import tech.qmates.openchat.domain.repository.UserRepository;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Set;
-import java.util.SimpleTimeZone;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SQLitePostRepositoryTest extends SQLiteRepositoryTest {
 
@@ -31,12 +28,12 @@ class SQLitePostRepositoryTest extends SQLiteRepositoryTest {
 
     @Test
     void storePostAndGetAllByUser() {
-        UUID userId = UUID.randomUUID();
+        UUID postAuthorUserId = UUID.randomUUID();
         ZonedDateTime postDatetime = ZonedDateTime.of(LocalDateTime.of(2023, Month.JULY, 20, 11, 49, 19), ZoneId.of("UTC"));
-        Post toStore = new Post(UUID.randomUUID(), userId, "Text of the post.", postDatetime);
+        Post toStore = new Post(UUID.randomUUID(), postAuthorUserId, "Text of the post.", postDatetime);
 
         repository.store(toStore);
-        Set<Post> allByUser  = repository.getAllByUser(userId);
+        Set<Post> allByUser = repository.getAllByUser(postAuthorUserId);
 
         assertThat(allByUser).hasSize(1);
         assertEquals(toStore, allByUser.iterator().next());
@@ -44,12 +41,12 @@ class SQLitePostRepositoryTest extends SQLiteRepositoryTest {
 
     @Test
     void dateTimesAreStoredInUTCProperlyConvertedToSameInstant() {
-        UUID userId = UUID.randomUUID();
+        UUID postAuthorUserId = UUID.randomUUID();
         ZonedDateTime postDatetime = ZonedDateTime.of(LocalDateTime.of(2023, Month.JULY, 20, 11, 49, 19), ZoneId.of("Europe/Rome"));
-        Post toStore = new Post(UUID.randomUUID(), userId, "any", postDatetime);
+        Post toStore = new Post(UUID.randomUUID(), postAuthorUserId, "any", postDatetime);
 
         repository.store(toStore);
-        Post storedPost = repository.getAllByUser(userId).iterator().next();
+        Post storedPost = repository.getAllByUser(postAuthorUserId).iterator().next();
 
         ZonedDateTime expected = ZonedDateTime.of(LocalDateTime.of(2023, Month.JULY, 20, 9, 49, 19), ZoneId.of("UTC"));
         assertEquals(expected, storedPost.dateTime());
