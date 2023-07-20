@@ -3,6 +3,7 @@ package tech.qmates.openchat.web.routes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import tech.qmates.openchat.domain.usecase.GetTimelineUseCase;
+import tech.qmates.openchat.web.AppFactory;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -20,10 +21,10 @@ public class TimelineRoute extends BaseRoute {
     public void handleGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             UUID userUUID = extractUserIdFromRequestURI(request);
-            GetTimelineUseCase usecase = new GetTimelineUseCase();
+            GetTimelineUseCase usecase = new GetTimelineUseCase(AppFactory.getUserRepository());
             List<Object> posts = usecase.run(userUUID);
             jsonResponse(SC_OK, posts, response);
-        } catch (IllegalArgumentException ex) {
+        } catch (GetTimelineUseCase.UserNotFoundException | IllegalArgumentException ex) {
             textResponse(SC_NOT_FOUND, "User not found.", response);
         }
     }
