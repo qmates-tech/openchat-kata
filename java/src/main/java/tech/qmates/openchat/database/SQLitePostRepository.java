@@ -38,8 +38,10 @@ public class SQLitePostRepository extends SQLiteRepository implements PostReposi
 
     public Set<Post> getAllByUser(UUID userId) {
         try (Connection connection = openConnection()) {
-            Statement query = connection.createStatement();
-            ResultSet resultSet = query.executeQuery("SELECT * FROM posts");
+            PreparedStatement query = connection.prepareStatement("SELECT * FROM posts WHERE userId = ?");
+            query.setString(1, userId.toString());
+
+            ResultSet resultSet = query.executeQuery();
             return mapResultSet((ResultSet row) -> new Post(
                 UUID.fromString(row.getString("id")),
                 UUID.fromString(row.getString("userId")),

@@ -12,6 +12,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,6 +42,25 @@ class SQLitePostRepositoryTest extends SQLiteRepositoryTest {
     }
 
     @Test
+    void getAllByUserReturnsOnlyUsersPosts() {
+        UUID firstUserId = UUID.randomUUID();
+        UUID secondUserId = UUID.randomUUID();
+        repository.store(newPostOfUser(firstUserId));
+        repository.store(newPostOfUser(secondUserId));
+        repository.store(newPostOfUser(firstUserId));
+        repository.store(newPostOfUser(firstUserId));
+        repository.store(newPostOfUser(secondUserId));
+
+        Set<Post> firstUserPosts = repository.getAllByUser(firstUserId);
+        Set<Post> secondUserPosts = repository.getAllByUser(secondUserId);
+
+        assertThat(firstUserPosts).hasSize(3);
+        assertThat(firstUserPosts).allSatisfy(p -> assertEquals(firstUserId, p.userId()));
+        assertThat(secondUserPosts).hasSize(2);
+        assertThat(secondUserPosts).allSatisfy(p -> assertEquals(secondUserId, p.userId()));
+    }
+
+    @Test
     void dateTimesAreStoredInUTCProperlyConvertedToSameInstant() {
         UUID postAuthorUserId = UUID.randomUUID();
         ZonedDateTime postDatetime = ZonedDateTime.of(LocalDateTime.of(2023, Month.JULY, 20, 11, 49, 19), ZoneId.of("Europe/Rome"));
@@ -57,7 +77,7 @@ class SQLitePostRepositoryTest extends SQLiteRepositoryTest {
 
     @Test
     void cannotStoreAlreadyUsedPostId() {
-        Post post = new Post(UUID.randomUUID(), UUID.randomUUID(), "any", ZonedDateTime.now());
+        Post post = newPostOfUser(UUID.randomUUID());
         repository.store(post);
 
         RuntimeException thrownException = assertThrows(
@@ -65,6 +85,10 @@ class SQLitePostRepositoryTest extends SQLiteRepositoryTest {
             () -> repository.store(post)
         );
         assertEquals("Cannot store post, id value already used.", thrownException.getMessage());
+    }
+
+    private static Post newPostOfUser(UUID postAuthorUserId) {
+        return new Post(UUID.randomUUID(), postAuthorUserId, "Text of the post.", ZonedDateTime.now());
     }
 
 }
