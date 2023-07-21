@@ -9,7 +9,6 @@ import tech.qmates.openchat.domain.usecase.SubmitPostUseCase;
 import tech.qmates.openchat.web.AppFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -45,12 +44,12 @@ public class TimelineRoute extends BaseRoute {
                 AppFactory.getRealClock());
             Post storedPost = usecase.run(authorUserId, postText);
 
-            jsonResponse(SC_CREATED, new HashMap<>() {{
-                put("postId", storedPost.id());
-                put("userId", storedPost.userId());
-                put("text", storedPost.text());
-                put("dateTime", "2023-09-19T19:30:00Z");
-            }}, response);
+            jsonResponse(SC_CREATED, Map.of(
+                "postId", storedPost.id(),
+                "userId", storedPost.userId(),
+                "text", storedPost.text(),
+                "dateTime", "2023-09-19T19:30:00Z"
+            ), response);
 
         } catch (UserNotFoundException | IllegalArgumentException ex) {
             textResponse(SC_NOT_FOUND, "User not found.", response);

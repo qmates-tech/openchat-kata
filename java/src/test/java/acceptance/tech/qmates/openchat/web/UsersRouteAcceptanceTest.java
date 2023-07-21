@@ -5,13 +5,10 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UsersRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest {
@@ -31,11 +28,11 @@ public class UsersRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest {
     @Test
     void registerSomeUsersAndRetrieveThem() throws IOException, InterruptedException {
         HttpRequest request = requestBuilderFor("/users")
-            .POST(bodyFor(new HashMap<>() {{
-                put("username", "alice90");
-                put("password", "pass1234");
-                put("about", "About alice user.");
-            }}))
+            .POST(bodyFor(Map.of(
+                "username", "alice90",
+                "password", "pass1234",
+                "about", "About alice user."
+            )))
             .build();
 
         HttpResponse<String> response = send(request);
@@ -84,11 +81,11 @@ public class UsersRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest {
         registerUser("bob89", "any", "any");
 
         HttpResponse<String> secondRegistrationResponse = send(requestBuilderFor("/users")
-            .POST(bodyFor(new HashMap<>() {{
-                put("username", "bob89");
-                put("password", "pass123");
-                put("about", "Another about.");
-            }})).build());
+            .POST(bodyFor(Map.of(
+                "username", "bob89",
+                "password", "pass123",
+                "about", "Another about."
+            ))).build());
         assertEquals(400, secondRegistrationResponse.statusCode());
         assertContentType("text/plain;charset=utf-8", secondRegistrationResponse);
         assertEquals("Username already in use.", secondRegistrationResponse.body());

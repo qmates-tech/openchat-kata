@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -33,9 +32,9 @@ public class TimelineRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest
     void userPublishAPost() throws IOException, InterruptedException {
         String existingUserId = registerAUser();
         HttpRequest request = requestBuilderFor("/users/" + existingUserId + "/timeline")
-            .POST(bodyFor(new HashMap<>() {{
-                put("text", "The post's text.");
-            }}))
+            .POST(bodyFor(Map.of(
+                "text", "The post's text."
+            )))
             .build();
 
         HttpResponse<String> response = send(request);

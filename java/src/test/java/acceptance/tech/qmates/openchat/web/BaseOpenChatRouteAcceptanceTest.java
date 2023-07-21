@@ -11,7 +11,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -42,11 +41,11 @@ public abstract class BaseOpenChatRouteAcceptanceTest {
 
     protected String registerUser(String username, String password, String userAbout) throws IOException, InterruptedException {
         HttpResponse<String> response = send(requestBuilderFor("/users")
-            .POST(bodyFor(new HashMap<>() {{
-                put("username", username);
-                put("password", password);
-                put("about", userAbout);
-            }})).build()
+            .POST(bodyFor(Map.of(
+                "username", username,
+                "password", password,
+                "about", userAbout
+            ))).build()
         );
         assertEquals(201, response.statusCode());
         Map<String, Object> responseBody = stringJsonToMap(response.body());
@@ -56,9 +55,9 @@ public abstract class BaseOpenChatRouteAcceptanceTest {
     protected String submitPost(String authorUserId, String postText) throws IOException, InterruptedException {
         HttpResponse<String> response = send(
             requestBuilderFor("/users/" + authorUserId + "/timeline")
-                .POST(bodyFor(new HashMap<>() {{
-                    put("text", postText);
-                }})).build()
+                .POST(bodyFor(Map.of(
+                    "text", postText
+                ))).build()
         );
 
         assertEquals(201, response.statusCode());
