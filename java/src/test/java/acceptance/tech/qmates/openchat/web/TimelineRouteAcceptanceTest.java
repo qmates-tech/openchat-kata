@@ -22,7 +22,7 @@ public class TimelineRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest
         HttpResponse<String> response = send(request);
 
         assertEquals(200, response.statusCode());
-        assertEquals("application/json", response.headers().firstValue("Content-Type").get());
+        assertContentType("application/json", response);
         assertEquals("[]", response.body());
     }
 
@@ -38,7 +38,7 @@ public class TimelineRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest
         HttpResponse<String> response = send(request);
 
         assertEquals(201, response.statusCode());
-        assertEquals("application/json", response.headers().firstValue("Content-Type").get());
+        assertContentType("application/json", response);
         Map<String, Object> responseBody = stringJsonToMap(response.body());
         assertDoesNotThrow(() -> {
             String postId = (String) responseBody.get("postId");
@@ -57,7 +57,7 @@ public class TimelineRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest
         HttpResponse<String> response = send(request);
 
         assertEquals(404, response.statusCode());
-        assertEquals("text/plain;charset=utf-8", response.headers().firstValue("Content-Type").get());
+        assertContentType("text/plain;charset=utf-8", response);
         assertEquals("User not found.", response.body());
     }
 
@@ -68,7 +68,7 @@ public class TimelineRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest
         HttpResponse<String> response = send(request);
 
         assertEquals(404, response.statusCode());
-        assertEquals("text/plain;charset=utf-8", response.headers().firstValue("Content-Type").get());
+        assertContentType("text/plain;charset=utf-8", response);
         assertEquals("User not found.", response.body());
     }
 

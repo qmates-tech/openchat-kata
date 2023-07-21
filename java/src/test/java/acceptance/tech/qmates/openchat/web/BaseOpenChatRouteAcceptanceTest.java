@@ -75,8 +75,8 @@ public abstract class BaseOpenChatRouteAcceptanceTest {
     }
     //@formatter:on
 
-    private void resetApplication() throws IOException, InterruptedException {
-        this.httpClient.send(requestBuilderFor("/admin").DELETE().build(), HttpResponse.BodyHandlers.discarding());
+    void assertContentType(String expected, HttpResponse<String> response) {
+        assertEquals(expected, response.headers().firstValue("Content-Type").get());
     }
 
     void assertExpectedUTCDateTimeFormat(String dateTimeString) {
@@ -91,5 +91,9 @@ public abstract class BaseOpenChatRouteAcceptanceTest {
                 "([0-5][0-9])" +
                 "Z$"
         );
+    }
+
+    private void resetApplication() throws IOException, InterruptedException {
+        this.httpClient.send(requestBuilderFor("/admin").DELETE().build(), HttpResponse.BodyHandlers.discarding());
     }
 }
