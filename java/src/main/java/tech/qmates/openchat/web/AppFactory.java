@@ -1,10 +1,13 @@
 package tech.qmates.openchat.web;
 
 import tech.qmates.openchat.database.SQLiteUserRepository;
+import tech.qmates.openchat.domain.UTCClock;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class AppFactory {
 
@@ -22,6 +25,10 @@ public class AppFactory {
             userRepositoryInstance.reset();
     }
 
+    public static UTCClock getRealClock() {
+        return () -> ZonedDateTime.now(ZoneId.of("UTC"));
+    }
+
     private static String getSqliteFilePath() {
         URL res = AppFactory.class.getClassLoader().getResource("production.db");
         if (res == null)
@@ -33,5 +40,4 @@ public class AppFactory {
             throw new RuntimeException("Cannot load sqlite database file!", e);
         }
     }
-
 }
