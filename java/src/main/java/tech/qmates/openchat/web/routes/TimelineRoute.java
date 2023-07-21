@@ -2,7 +2,9 @@ package tech.qmates.openchat.web.routes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import tech.qmates.openchat.domain.entity.Post;
 import tech.qmates.openchat.domain.usecase.GetTimelineUseCase;
+import tech.qmates.openchat.domain.usecase.SubmitPostUseCase;
 import tech.qmates.openchat.web.AppFactory;
 
 import java.io.IOException;
@@ -33,10 +35,13 @@ public class TimelineRoute extends BaseRoute {
             Map<String, Object> requestBody = stringJsonToMap(request.getInputStream());
             String postText = (String) requestBody.get("text");
 
+            SubmitPostUseCase usecase = new SubmitPostUseCase();
+            Post storedPost = usecase.run(authorUserId, postText);
+
             jsonResponse(SC_CREATED, new HashMap<>() {{
-                put("postId", UUID.randomUUID());
-                put("userId", authorUserId);
-                put("text", postText);
+                put("postId", storedPost.id());
+                put("userId", storedPost.userId());
+                put("text", storedPost.text());
                 put("dateTime", "2023-09-19T19:30:00Z");
             }}, response);
 
