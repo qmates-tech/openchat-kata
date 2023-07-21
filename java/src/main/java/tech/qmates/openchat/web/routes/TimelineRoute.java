@@ -25,7 +25,7 @@ public class TimelineRoute extends BaseRoute {
         try {
             UUID userUUID = extractUserIdFromRequestURI(request);
             GetTimelineUseCase usecase = new GetTimelineUseCase(AppFactory.getUserRepository());
-            List<Object> posts = usecase.run(userUUID);
+            List<Post> posts = usecase.run(userUUID);
             jsonResponse(SC_OK, posts, response);
         } catch (UserNotFoundException | IllegalArgumentException ex) {
             textResponse(SC_NOT_FOUND, "User not found.", response);

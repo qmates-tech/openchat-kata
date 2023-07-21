@@ -1,6 +1,7 @@
 package tech.qmates.openchat.domain.usecase;
 
 import tech.qmates.openchat.domain.UserNotFoundException;
+import tech.qmates.openchat.domain.entity.Post;
 import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
@@ -15,7 +16,7 @@ public class GetTimelineUseCase {
         this.userRepository = userRepository;
     }
 
-    public List<Object> run(UUID userUUID) throws UserNotFoundException {
+    public List<Post> run(UUID userUUID) throws UserNotFoundException {
         RegisteredUser user = userRepository.getUserById(userUUID);
         if (user == null)
             throw new UserNotFoundException(userUUID);
