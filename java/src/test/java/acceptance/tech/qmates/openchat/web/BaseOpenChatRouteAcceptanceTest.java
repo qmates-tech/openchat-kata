@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class BaseOpenChatRouteAcceptanceTest {
@@ -27,6 +28,14 @@ public abstract class BaseOpenChatRouteAcceptanceTest {
     @BeforeEach
     void setUp() throws IOException, InterruptedException {
         resetApplication();
+    }
+
+    protected String registerAUser() throws IOException, InterruptedException {
+        return registerUser("any");
+    }
+
+    protected String registerUser(String username) throws IOException, InterruptedException {
+        return registerUser(username, "any", "any");
     }
 
     protected String registerUser(String username, String password, String userAbout) throws IOException, InterruptedException {
@@ -68,5 +77,19 @@ public abstract class BaseOpenChatRouteAcceptanceTest {
 
     private void resetApplication() throws IOException, InterruptedException {
         this.httpClient.send(requestBuilderFor("/admin").DELETE().build(), HttpResponse.BodyHandlers.discarding());
+    }
+
+    void assertExpectedUTCDateTimeFormat(String dateTimeString) {
+        // 2018-01-10T11:30:00Z (iso format but without milliseconds)
+        assertThat(dateTimeString).matches(
+            "^((19|20)[0-9][0-9])[-]" +
+                "(0[1-9]|1[012])[-]" +
+                "(0[1-9]|[12][0-9]|3[01])" +
+                "[T]" +
+                "([01][0-9]|[2][0-3])[:]" +
+                "([0-5][0-9])[:]" +
+                "([0-5][0-9])" +
+                "Z$"
+        );
     }
 }

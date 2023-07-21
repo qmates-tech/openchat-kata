@@ -6,14 +6,11 @@ import tech.qmates.openchat.domain.usecase.GetTimelineUseCase;
 import tech.qmates.openchat.web.AppFactory;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-import static jakarta.servlet.http.HttpServletResponse.SC_OK;
+import static jakarta.servlet.http.HttpServletResponse.*;
 
 public class TimelineRoute extends BaseRoute {
 
@@ -25,6 +22,25 @@ public class TimelineRoute extends BaseRoute {
             List<Object> posts = usecase.run(userUUID);
             jsonResponse(SC_OK, posts, response);
         } catch (GetTimelineUseCase.UserNotFoundException | IllegalArgumentException ex) {
+            textResponse(SC_NOT_FOUND, "User not found.", response);
+        }
+    }
+
+    @Override
+    public void handlePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            UUID authorUserId = extractUserIdFromRequestURI(request);
+            Map<String, Object> requestBody = stringJsonToMap(request.getInputStream());
+            String postText = (String) requestBody.get("text");
+
+            jsonResponse(SC_CREATED, new HashMap<>() {{
+                put("postId", UUID.randomUUID());
+                put("userId", authorUserId);
+                put("text", postText);
+                put("dateTime", "2023-09-19T19:30:00Z");
+            }}, response);
+
+        } catch (IllegalArgumentException ex) {
             textResponse(SC_NOT_FOUND, "User not found.", response);
         }
     }
