@@ -2,14 +2,17 @@ package tech.qmates.openchat.web.routes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import tech.qmates.openchat.domain.UserNotFoundException;
 import tech.qmates.openchat.domain.entity.Post;
 import tech.qmates.openchat.domain.usecase.GetTimelineUseCase;
 import tech.qmates.openchat.domain.usecase.SubmitPostUseCase;
-import tech.qmates.openchat.domain.UserNotFoundException;
 import tech.qmates.openchat.web.AppFactory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +39,10 @@ public class TimelineRoute extends BaseRoute {
             Map<String, Object> requestBody = stringJsonToMap(request.getInputStream());
             String postText = (String) requestBody.get("text");
 
-            SubmitPostUseCase usecase = new SubmitPostUseCase(AppFactory.getPostRepository(), AppFactory.getRealClock());
+            SubmitPostUseCase usecase = new SubmitPostUseCase(
+                AppFactory.getPostRepository(),
+                AppFactory.getUserRepository(),
+                AppFactory.getRealClock());
             Post storedPost = usecase.run(authorUserId, postText);
 
             jsonResponse(SC_CREATED, new HashMap<>() {{
@@ -46,7 +52,7 @@ public class TimelineRoute extends BaseRoute {
                 put("dateTime", "2023-09-19T19:30:00Z");
             }}, response);
 
-        } catch (IllegalArgumentException ex) {
+        } catch (UserNotFoundException | IllegalArgumentException ex) {
             textResponse(SC_NOT_FOUND, "User not found.", response);
         }
     }
