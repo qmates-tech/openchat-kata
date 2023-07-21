@@ -1,5 +1,6 @@
 package tech.qmates.openchat.domain.usecase;
 
+import tech.qmates.openchat.domain.UserNotFoundException;
 import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
@@ -22,9 +23,4 @@ public class GetTimelineUseCase {
         return new ArrayList<>();
     }
 
-    public static class UserNotFoundException extends Exception {
-        public UserNotFoundException(UUID uuid) {
-            super("User with uuid [" + uuid + "] not found!");
-        }
-    }
 }

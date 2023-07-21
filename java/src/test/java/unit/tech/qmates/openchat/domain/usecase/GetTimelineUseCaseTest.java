@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.repository.UserRepository;
 import tech.qmates.openchat.domain.usecase.GetTimelineUseCase;
+import tech.qmates.openchat.domain.UserNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +20,7 @@ class GetTimelineUseCaseTest {
     private final GetTimelineUseCase usecase = new GetTimelineUseCase(userRepository);
 
     @Test
-    void returnsEmptyPostsCollectionForExistingUser() throws GetTimelineUseCase.UserNotFoundException {
+    void returnsEmptyPostsCollectionForExistingUser() throws UserNotFoundException {
         UUID existingUserId = UUID.randomUUID();
         when(userRepository.getUserById(existingUserId)).thenReturn(new RegisteredUser(existingUserId, "any", "any"));
 
@@ -33,8 +34,8 @@ class GetTimelineUseCaseTest {
         when(userRepository.getUserById(any())).thenReturn(null);
         UUID unexistingUserId = UUID.fromString("bfb62439-8711-447a-b0f8-bdbef5ceb4d7");
 
-        GetTimelineUseCase.UserNotFoundException thrownException = assertThrows(
-            GetTimelineUseCase.UserNotFoundException.class,
+        UserNotFoundException thrownException = assertThrows(
+            UserNotFoundException.class,
             () -> usecase.run(unexistingUserId)
         );
 

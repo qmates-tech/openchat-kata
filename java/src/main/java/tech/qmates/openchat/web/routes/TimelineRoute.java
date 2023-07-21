@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import tech.qmates.openchat.domain.entity.Post;
 import tech.qmates.openchat.domain.usecase.GetTimelineUseCase;
 import tech.qmates.openchat.domain.usecase.SubmitPostUseCase;
+import tech.qmates.openchat.domain.UserNotFoundException;
 import tech.qmates.openchat.web.AppFactory;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class TimelineRoute extends BaseRoute {
             GetTimelineUseCase usecase = new GetTimelineUseCase(AppFactory.getUserRepository());
             List<Object> posts = usecase.run(userUUID);
             jsonResponse(SC_OK, posts, response);
-        } catch (GetTimelineUseCase.UserNotFoundException | IllegalArgumentException ex) {
+        } catch (UserNotFoundException | IllegalArgumentException ex) {
             textResponse(SC_NOT_FOUND, "User not found.", response);
         }
     }
