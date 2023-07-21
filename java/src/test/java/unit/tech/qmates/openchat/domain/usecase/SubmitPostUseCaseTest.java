@@ -18,13 +18,14 @@ import static org.mockito.Mockito.*;
 
 class SubmitPostUseCaseTest {
 
+    private final RegisteredUser registeredUser = new RegisteredUser(UUID.randomUUID(), "alice90", "any");
     private final ZonedDateTime fakeToday = ZonedDateTime.of(
         LocalDate.of(2023, Month.JULY, 21), LocalTime.of(16, 40, 19), ZoneId.of("UTC")
     );
-    private final UTCClock fakeClock = () -> fakeToday;
+
     private final UserRepository userRepository = mock(UserRepository.class);
     private final PostRepository postRepository = mock(PostRepository.class);
-    private final RegisteredUser registeredUser = new RegisteredUser(UUID.randomUUID(), "alice90", "any");
+    private final UTCClock fakeClock = () -> fakeToday;
 
     private final SubmitPostUseCase usecase = new SubmitPostUseCase(postRepository, userRepository, fakeClock);
 
