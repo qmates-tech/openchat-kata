@@ -14,8 +14,10 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class BaseOpenChatRouteAcceptanceTest {
@@ -77,6 +79,13 @@ public abstract class BaseOpenChatRouteAcceptanceTest {
 
     void assertContentType(String expected, HttpResponse<String> response) {
         assertEquals(expected, response.headers().firstValue("Content-Type").get());
+    }
+
+    void assertValidUUIDV4(String value) {
+        assertDoesNotThrow(
+            () -> assertEquals(4, UUID.fromString(value).version()),
+            "Provided string is not a valid v4 uuid ! -> " + value
+        );
     }
 
     void assertExpectedUTCDateTimeFormat(String dateTimeString) {

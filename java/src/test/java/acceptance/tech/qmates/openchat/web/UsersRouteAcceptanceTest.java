@@ -46,7 +46,7 @@ public class UsersRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest {
         assertEquals("alice90", responseBody.get("username"));
         assertEquals("About alice user.", responseBody.get("about"));
         String aliceUUID = (String) responseBody.get("id");
-        assertDoesNotThrow(() -> assertEquals(4, UUID.fromString(aliceUUID).version()));
+        assertValidUUIDV4(aliceUUID);
 
         // ========================================= register some other users
 
