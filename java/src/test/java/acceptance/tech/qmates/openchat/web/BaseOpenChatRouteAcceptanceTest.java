@@ -53,6 +53,19 @@ public abstract class BaseOpenChatRouteAcceptanceTest {
         return (String) responseBody.get("id");
     }
 
+    protected String submitPost(String authorUserId, String postText) throws IOException, InterruptedException {
+        HttpResponse<String> response = send(
+            requestBuilderFor("/users/" + authorUserId + "/timeline")
+                .POST(bodyFor(new HashMap<>() {{
+                    put("text", postText);
+                }})).build()
+        );
+
+        assertEquals(201, response.statusCode());
+        Map<String, Object> responseBody = stringJsonToMap(response.body());
+        return (String) responseBody.get("postId");
+    }
+
     protected HttpRequest.BodyPublisher bodyFor(Object requestBody) throws JsonProcessingException {
         return HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(requestBody));
     }
