@@ -1,7 +1,9 @@
 package tech.qmates.openchat.web;
 
+import tech.qmates.openchat.database.SQLitePostRepository;
 import tech.qmates.openchat.database.SQLiteUserRepository;
 import tech.qmates.openchat.domain.UTCClock;
+import tech.qmates.openchat.domain.repository.PostRepository;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
 import java.net.URISyntaxException;
@@ -12,12 +14,20 @@ import java.time.ZonedDateTime;
 public class AppFactory {
 
     private static UserRepository userRepositoryInstance;
+    private static PostRepository postRepositoryInstance;
 
     public static UserRepository getUserRepository() {
         if (userRepositoryInstance == null)
             userRepositoryInstance = new SQLiteUserRepository(getSqliteFilePath());
 
         return userRepositoryInstance;
+    }
+
+    public static PostRepository getPostRepository() {
+        if (postRepositoryInstance == null)
+            postRepositoryInstance = new SQLitePostRepository(getSqliteFilePath());
+
+        return postRepositoryInstance;
     }
 
     public static void resetRepositories() {

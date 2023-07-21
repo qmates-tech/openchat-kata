@@ -36,7 +36,7 @@ public class TimelineRoute extends BaseRoute {
             Map<String, Object> requestBody = stringJsonToMap(request.getInputStream());
             String postText = (String) requestBody.get("text");
 
-            SubmitPostUseCase usecase = new SubmitPostUseCase(AppFactory.getRealClock());
+            SubmitPostUseCase usecase = new SubmitPostUseCase(AppFactory.getPostRepository(), AppFactory.getRealClock());
             Post storedPost = usecase.run(authorUserId, postText);
 
             jsonResponse(SC_CREATED, new HashMap<>() {{
