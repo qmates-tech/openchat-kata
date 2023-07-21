@@ -46,7 +46,7 @@ public class TimelineRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest
         });
         assertEquals(existingUserId, responseBody.get("userId"));
         assertEquals("The post's text.", responseBody.get("text"));
-        assertExpectedUTCDateTimeFormat((String) responseBody.get("dateTime"));
+        assertExpectedUTCDateTimeFormat(responseBody.get("dateTime"));
     }
 
     @Test

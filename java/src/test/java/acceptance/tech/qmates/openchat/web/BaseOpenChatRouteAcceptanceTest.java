@@ -81,16 +81,16 @@ public abstract class BaseOpenChatRouteAcceptanceTest {
         assertEquals(expected, response.headers().firstValue("Content-Type").get());
     }
 
-    void assertValidUUIDV4(String value) {
+    void assertValidUUIDV4(Object value) {
         assertDoesNotThrow(
-            () -> assertEquals(4, UUID.fromString(value).version()),
+            () -> assertEquals(4, UUID.fromString(value.toString()).version()),
             "Provided string is not a valid v4 uuid ! -> " + value
         );
     }
 
-    void assertExpectedUTCDateTimeFormat(String dateTimeString) {
+    void assertExpectedUTCDateTimeFormat(Object dateTimeString) {
         // 2018-01-10T11:30:00Z (iso format but without milliseconds)
-        assertThat(dateTimeString).matches(
+        assertThat(dateTimeString.toString()).matches(
             "^((19|20)[0-9][0-9])[-]" +
                 "(0[1-9]|1[012])[-]" +
                 "(0[1-9]|[12][0-9]|3[01])" +
