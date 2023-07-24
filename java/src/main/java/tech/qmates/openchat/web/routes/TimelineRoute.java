@@ -9,6 +9,9 @@ import tech.qmates.openchat.domain.usecase.SubmitPostUseCase;
 import tech.qmates.openchat.web.AppFactory;
 
 import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -67,8 +70,13 @@ public class TimelineRoute extends BaseRoute {
             "postId", p.id().toString(),
             "userId", p.userId().toString(),
             "text", p.text(),
-            "dateTime", "2023-09-19T19:30:00Z" // TODO
+            "dateTime", serializeDateTime(p.dateTime())
         );
+    }
+
+    private static String serializeDateTime(ZonedDateTime zonedDateTime) {
+        ZonedDateTime utcDateTime = zonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+        return utcDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
     }
 
     private static UUID extractUserIdFromRequestURI(HttpServletRequest request) {
