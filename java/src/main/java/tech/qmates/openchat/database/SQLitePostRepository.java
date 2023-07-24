@@ -7,7 +7,6 @@ import tech.qmates.openchat.domain.repository.PostRepository;
 import java.sql.*;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.UUID;
 
@@ -46,13 +45,12 @@ public class SQLitePostRepository extends SQLiteRepository implements PostReposi
                 UUID.fromString(row.getString("id")),
                 UUID.fromString(row.getString("userId")),
                 row.getString("text"),
-                deserializeDateTime(row.getTimestamp("dateTime"))
+                deserializeDateTime(row.getString("dateTime"))
             ), resultSet);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
 
     public void reset() {
         try (Connection connection = openConnection()) {
@@ -65,11 +63,11 @@ public class SQLitePostRepository extends SQLiteRepository implements PostReposi
 
     private static String serializeDateTime(ZonedDateTime zonedDateTime) {
         ZonedDateTime utcDateTime = zonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
-        return utcDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return utcDateTime.toString();
     }
 
-    private ZonedDateTime deserializeDateTime(Timestamp timestamp) {
-        return ZonedDateTime.of(timestamp.toLocalDateTime(), ZoneId.of("UTC"));
+    private ZonedDateTime deserializeDateTime(String timestampString) {
+        return ZonedDateTime.parse(timestampString);
     }
 
 }
