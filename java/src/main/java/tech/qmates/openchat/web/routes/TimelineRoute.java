@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static jakarta.servlet.http.HttpServletResponse.*;
 
@@ -27,8 +28,19 @@ public class TimelineRoute extends BaseRoute {
                 AppFactory.getPostRepository(),
                 AppFactory.getUserRepository()
             );
-            List<Post> posts = usecase.run(userUUID);
-            jsonResponse(SC_OK, posts, response);
+
+            List<Post> userPosts = usecase.run(userUUID);
+            List<Map<String, String>> serializedPosts = userPosts
+                .stream()
+                .map((p) -> Map.of(
+                    "postId", p.id().toString(),
+                    "userId", p.userId().toString(),
+                    "text", p.text(),
+                    "dateTime", "2023-09-19T19:30:00Z" // TODO
+                ))
+                .collect(Collectors.toList());
+
+            jsonResponse(SC_OK, serializedPosts, response);
         } catch (UserNotFoundException | IllegalArgumentException ex) {
             textResponse(SC_NOT_FOUND, "User not found.", response);
         }
@@ -52,7 +64,7 @@ public class TimelineRoute extends BaseRoute {
                 "postId", storedPost.id(),
                 "userId", storedPost.userId(),
                 "text", storedPost.text(),
-                "dateTime", "2023-09-19T19:30:00Z"
+                "dateTime", "2023-09-19T19:30:00Z" // TODO
             ), response);
 
         } catch (UserNotFoundException | IllegalArgumentException ex) {

@@ -1,6 +1,5 @@
 package acceptance.tech.qmates.openchat.web;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -52,11 +51,12 @@ public class TimelineRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest
     }
 
     @Test
-    @Disabled("WIP")
     void submitSomePostsAndGetTimelinePostsInDescendingOrder() throws IOException, InterruptedException {
         String existingUserId = registerAUser();
         String firstPostId = submitPost(existingUserId, "The first post.");
+        Thread.sleep(1000);
         String secondPostId = submitPost(existingUserId, "The second post.");
+        Thread.sleep(1000);
         String thirdPostId = submitPost(existingUserId, "The third post.");
 
         HttpRequest request = requestBuilderFor("/users/" + existingUserId + "/timeline").GET().build();
