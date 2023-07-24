@@ -32,12 +32,7 @@ public class TimelineRoute extends BaseRoute {
             List<Post> userPosts = usecase.run(userUUID);
             List<Map<String, String>> serializedPosts = userPosts
                 .stream()
-                .map((p) -> Map.of(
-                    "postId", p.id().toString(),
-                    "userId", p.userId().toString(),
-                    "text", p.text(),
-                    "dateTime", "2023-09-19T19:30:00Z" // TODO
-                ))
+                .map(TimelineRoute::serializePost)
                 .collect(Collectors.toList());
 
             jsonResponse(SC_OK, serializedPosts, response);
@@ -60,16 +55,20 @@ public class TimelineRoute extends BaseRoute {
             );
             Post storedPost = usecase.run(authorUserId, postText);
 
-            jsonResponse(SC_CREATED, Map.of(
-                "postId", storedPost.id(),
-                "userId", storedPost.userId(),
-                "text", storedPost.text(),
-                "dateTime", "2023-09-19T19:30:00Z" // TODO
-            ), response);
+            jsonResponse(SC_CREATED, serializePost(storedPost), response);
 
         } catch (UserNotFoundException | IllegalArgumentException ex) {
             textResponse(SC_NOT_FOUND, "User not found.", response);
         }
+    }
+
+    private static Map<String, String> serializePost(Post p) {
+        return Map.of(
+            "postId", p.id().toString(),
+            "userId", p.userId().toString(),
+            "text", p.text(),
+            "dateTime", "2023-09-19T19:30:00Z" // TODO
+        );
     }
 
     private static UUID extractUserIdFromRequestURI(HttpServletRequest request) {
