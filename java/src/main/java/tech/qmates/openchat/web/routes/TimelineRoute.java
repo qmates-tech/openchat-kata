@@ -27,17 +27,14 @@ public class TimelineRoute extends BaseRoute {
     public void handleGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             UUID userUUID = extractUserIdFromRequestURI(request);
-            GetTimelineUseCase usecase = new GetTimelineUseCase(
-                AppFactory.getPostRepository(),
-                AppFactory.getUserRepository()
-            );
 
+            GetTimelineUseCase usecase = AppFactory.buildGetTimelineUseCase();
             List<Post> userPosts = usecase.run(userUUID);
+
             List<Map<String, String>> serializedPosts = userPosts
                 .stream()
                 .map(TimelineRoute::serializePost)
                 .collect(Collectors.toList());
-
             jsonResponse(SC_OK, serializedPosts, response);
         } catch (UserNotFoundException | IllegalArgumentException ex) {
             textResponse(SC_NOT_FOUND, "User not found.", response);
@@ -51,15 +48,10 @@ public class TimelineRoute extends BaseRoute {
             Map<String, Object> requestBody = stringJsonToMap(request.getInputStream());
             String postText = (String) requestBody.get("text");
 
-            SubmitPostUseCase usecase = new SubmitPostUseCase(
-                AppFactory.getPostRepository(),
-                AppFactory.getUserRepository(),
-                AppFactory.getRealClock()
-            );
+            SubmitPostUseCase usecase = AppFactory.buildSubmitPostUseCase();
             Post storedPost = usecase.run(authorUserId, postText);
 
             jsonResponse(SC_CREATED, serializePost(storedPost), response);
-
         } catch (UserNotFoundException | IllegalArgumentException ex) {
             textResponse(SC_NOT_FOUND, "User not found.", response);
         }

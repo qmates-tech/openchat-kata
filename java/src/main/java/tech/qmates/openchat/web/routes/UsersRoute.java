@@ -20,8 +20,10 @@ public class UsersRoute extends BaseRoute {
 
     @Override
     public void handleGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        GetAllUserUseCase usecase = new GetAllUserUseCase(AppFactory.getUserRepository());
+        GetAllUserUseCase usecase = AppFactory.buildGetAllUserUseCase();
+
         Set<RegisteredUser> users = usecase.run();
+
         List<Map<String, String>> serializedUsers = users
             .stream()
             .map(user -> Map.of(
@@ -35,13 +37,13 @@ public class UsersRoute extends BaseRoute {
 
     @Override
     public void handlePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Map<String, Object> requestBody = stringJsonToMap(request.getInputStream());
-        String username = (String) requestBody.get("username");
-        String password = (String) requestBody.get("password");
-        String about = (String) requestBody.get("about");
-
         try {
-            RegisterUserUseCase usecase = new RegisterUserUseCase(AppFactory.getUserRepository());
+            Map<String, Object> requestBody = stringJsonToMap(request.getInputStream());
+            String username = (String) requestBody.get("username");
+            String password = (String) requestBody.get("password");
+            String about = (String) requestBody.get("about");
+
+            RegisterUserUseCase usecase = AppFactory.buildRegisterUserUseCase();
             UUID storedUserUUID = usecase.run(username, password, about);
 
             jsonResponse(SC_CREATED, Map.of(
