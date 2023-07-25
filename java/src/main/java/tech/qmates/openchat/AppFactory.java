@@ -1,4 +1,4 @@
-package tech.qmates.openchat.web;
+package tech.qmates.openchat;
 
 import tech.qmates.openchat.database.SQLitePostRepository;
 import tech.qmates.openchat.database.SQLiteUserRepository;

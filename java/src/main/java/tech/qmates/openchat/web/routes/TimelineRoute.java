@@ -6,7 +6,7 @@ import tech.qmates.openchat.domain.UserNotFoundException;
 import tech.qmates.openchat.domain.entity.Post;
 import tech.qmates.openchat.domain.usecase.GetTimelineUseCase;
 import tech.qmates.openchat.domain.usecase.SubmitPostUseCase;
-import tech.qmates.openchat.web.AppFactory;
+import tech.qmates.openchat.AppFactory;
 
 import java.io.IOException;
 import java.time.ZoneId;

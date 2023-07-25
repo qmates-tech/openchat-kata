@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.usecase.GetAllUserUseCase;
 import tech.qmates.openchat.domain.usecase.RegisterUserUseCase;
-import tech.qmates.openchat.web.AppFactory;
+import tech.qmates.openchat.AppFactory;
 
 import java.io.IOException;
 import java.util.List;

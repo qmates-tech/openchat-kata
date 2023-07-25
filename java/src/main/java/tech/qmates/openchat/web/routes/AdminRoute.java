@@ -2,7 +2,7 @@ package tech.qmates.openchat.web.routes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import tech.qmates.openchat.web.AppFactory;
+import tech.qmates.openchat.AppFactory;
 
 public class AdminRoute extends BaseRoute {
 
