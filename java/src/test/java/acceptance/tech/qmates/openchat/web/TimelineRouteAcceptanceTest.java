@@ -52,26 +52,48 @@ public class TimelineRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest
 
     @Test
     void submitSomePostsAndGetTimelinePostsInDescendingOrder() throws IOException, InterruptedException {
-        String existingUserId = registerAUser();
-        String firstPostId = submitPost(existingUserId, "The first post.");
-        String secondPostId = submitPost(existingUserId, "The second post.");
-        String thirdPostId = submitPost(existingUserId, "The third post.");
+        String aliceId = registerUser("alice90");
+        String bobId = registerUser("bob89");
 
-        HttpRequest request = requestBuilderFor("/users/" + existingUserId + "/timeline").GET().build();
-        HttpResponse<String> response = send(request);
+        // ========================================= submit some posts
 
-        assertEquals(200, response.statusCode());
-        assertContentType("application/json", response);
-        List<Map<String, Object>> posts = stringJsonArrayToList(response.body());
-        assertThat(posts).hasSize(3);
-        assertEquals(thirdPostId, posts.get(0).get("postId"));
-        assertEquals(secondPostId, posts.get(1).get("postId"));
-        assertEquals(firstPostId, posts.get(2).get("postId"));
-        assertThat(posts).allSatisfy((post) -> assertEquals(existingUserId, post.get("userId")));
-        assertEquals("The third post.", posts.get(0).get("text"));
-        assertEquals("The second post.", posts.get(1).get("text"));
-        assertEquals("The first post.", posts.get(2).get("text"));
-        assertThat(posts).allSatisfy((post) -> assertExpectedUTCDateTimeFormat(post.get("dateTime")));
+        List<String> alicePostsIds = List.of(
+            submitPost(aliceId, "Alice user, first post."),
+            submitPost(aliceId, "Alice user, second post."),
+            submitPost(aliceId, "Alice user, third post.")
+        );
+        List<String> bobPostsIds = List.of(
+            submitPost(bobId, "Bob user, first post."),
+            submitPost(bobId, "Bob user, second post.")
+        );
+
+        // ========================================= check alice's timeline
+
+        HttpResponse<String> aliceTimeline = send(requestBuilderFor("/users/" + aliceId + "/timeline").GET().build());
+
+        assertEquals(200, aliceTimeline.statusCode());
+        assertContentType("application/json", aliceTimeline);
+        List<Map<String, Object>> alicePosts = stringJsonArrayToList(aliceTimeline.body());
+        assertThat(alicePosts).hasSize(3);
+        assertEquals(alicePostsIds.get(2), alicePosts.get(0).get("postId"));
+        assertEquals(alicePostsIds.get(1), alicePosts.get(1).get("postId"));
+        assertEquals(alicePostsIds.get(0), alicePosts.get(2).get("postId"));
+        assertThat(alicePosts).allSatisfy((post) -> assertEquals(aliceId, post.get("userId")));
+        assertEquals("Alice user, third post.", alicePosts.get(0).get("text"));
+        assertEquals("Alice user, second post.", alicePosts.get(1).get("text"));
+        assertEquals("Alice user, first post.", alicePosts.get(2).get("text"));
+        assertThat(alicePosts).allSatisfy((post) -> assertExpectedUTCDateTimeFormat(post.get("dateTime")));
+
+        // ========================================= check bob's timeline
+
+        HttpResponse<String> bobTimeline = send(requestBuilderFor("/users/" + bobId + "/timeline").GET().build());
+
+        List<Map<String, Object>> bobPosts = stringJsonArrayToList(bobTimeline.body());
+        assertThat(bobPosts).hasSize(2);
+        assertEquals(bobPostsIds.get(1), bobPosts.get(0).get("postId"));
+        assertEquals(bobPostsIds.get(0), bobPosts.get(1).get("postId"));
+        assertThat(bobPosts).allSatisfy((post) -> assertEquals(bobId, post.get("userId")));
+        assertEquals("Bob user, second post.", bobPosts.get(0).get("text"));
     }
 
     @Test
