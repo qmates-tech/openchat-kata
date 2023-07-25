@@ -28,7 +28,7 @@ public class TimelineRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest
     }
 
     @Test
-    void userPublishAPost() throws IOException, InterruptedException {
+    void registeredUserSubmitAPost() throws IOException, InterruptedException {
         String existingUserId = registerAUser();
         HttpRequest request = requestBuilderFor("/users/" + existingUserId + "/timeline")
             .POST(bodyFor(Map.of(

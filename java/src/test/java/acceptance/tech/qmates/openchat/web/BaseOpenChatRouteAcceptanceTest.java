@@ -40,26 +40,23 @@ public abstract class BaseOpenChatRouteAcceptanceTest {
     }
 
     protected String registerUser(String username, String password, String userAbout) throws IOException, InterruptedException {
-        HttpResponse<String> response = send(requestBuilderFor("/users")
+        HttpRequest registerRequest = requestBuilderFor("/users")
             .POST(bodyFor(Map.of(
                 "username", username,
                 "password", password,
                 "about", userAbout
-            ))).build()
-        );
+            ))).build();
+        HttpResponse<String> response = send(registerRequest);
         assertEquals(201, response.statusCode());
         Map<String, Object> responseBody = stringJsonToMap(response.body());
         return (String) responseBody.get("id");
     }
 
     protected String submitPost(String authorUserId, String postText) throws IOException, InterruptedException {
-        HttpResponse<String> response = send(
-            requestBuilderFor("/users/" + authorUserId + "/timeline")
-                .POST(bodyFor(Map.of(
-                    "text", postText
-                ))).build()
-        );
-
+        HttpRequest submitRequest = requestBuilderFor("/users/" + authorUserId + "/timeline")
+            .POST(bodyFor(Map.of("text", postText)))
+            .build();
+        HttpResponse<String> response = send(submitRequest);
         assertEquals(201, response.statusCode());
         Map<String, Object> responseBody = stringJsonToMap(response.body());
         return (String) responseBody.get("postId");
