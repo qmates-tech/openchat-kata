@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class SubmitPostUseCase {
 
-    public static final List<String> FORBIDDEN_WORDS = List.of("orange", "elephant");
+    public static final List<String> FORBIDDEN_WORDS = List.of("orange", "elephant", "ice cream");
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
