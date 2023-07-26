@@ -26,7 +26,7 @@ public class SubmitPostUseCase {
         if (user == null)
             throw new UserNotFoundException(authorUserId);
 
-        if(postText.contains("orange"))
+        if(postText.toLowerCase().contains("orange"))
             throw new InappropriateLanguageException(postText);
 
         Post postToStore = new Post(

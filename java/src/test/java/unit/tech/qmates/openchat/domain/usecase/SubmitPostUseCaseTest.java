@@ -2,6 +2,8 @@ package unit.tech.qmates.openchat.domain.usecase;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import tech.qmates.openchat.domain.UTCClock;
 import tech.qmates.openchat.domain.UserNotFoundException;
 import tech.qmates.openchat.domain.entity.Post;
@@ -63,15 +65,21 @@ class SubmitPostUseCaseTest {
         }));
     }
 
-    @Test
-    void throwsExceptionForInappropriateLanguageInPostText() {
-        String postTextWithInappropriateLanguage = "I like orange juice !";
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "I like orange juice !",
+        "Orange is my favorite fruit.",
+        "I LOVE ORANGE !",
+        "I collected many oranges today."
+    })
+    void throwsExceptionForInappropriateLanguageInPostText(String postText) {
         SubmitPostUseCase.InappropriateLanguageException thrownException = assertThrows(
             SubmitPostUseCase.InappropriateLanguageException.class,
-            () -> usecase.run(registeredUser.uuid(), postTextWithInappropriateLanguage)
+            () -> usecase.run(registeredUser.uuid(), postText)
         );
 
-        assertEquals("Post text contains inappropriate language: I like orange juice !", thrownException.getMessage());
+        String expectedExceptionMessage = "Post text contains inappropriate language: " + postText;
+        assertEquals(expectedExceptionMessage, thrownException.getMessage());
     }
 
     @Test
