@@ -35,7 +35,7 @@ class SubmitPostUseCaseTest {
     }
 
     @Test
-    void returnsTheStoredPost() throws UserNotFoundException {
+    void returnsTheStoredPost() throws UserNotFoundException, SubmitPostUseCase.InappropriateLanguageException {
         Post storedPost = usecase.run(registeredUser.uuid(), "The post text.");
 
         assertNotNull(storedPost.id());
@@ -45,13 +45,13 @@ class SubmitPostUseCaseTest {
     }
 
     @Test
-    void returnedPostHasDateTimeFromClock() throws UserNotFoundException {
+    void returnedPostHasDateTimeFromClock() throws UserNotFoundException, SubmitPostUseCase.InappropriateLanguageException {
         Post storedPost = usecase.run(registeredUser.uuid(), "any");
         assertEquals(fakeToday, storedPost.dateTime());
     }
 
     @Test
-    void storeThePostInRepository() throws UserNotFoundException {
+    void storeThePostInRepository() throws UserNotFoundException, SubmitPostUseCase.InappropriateLanguageException {
         usecase.run(registeredUser.uuid(), "The post's text.");
 
         verify(postRepository, times(1)).store(argThat((p) -> {
@@ -61,6 +61,17 @@ class SubmitPostUseCaseTest {
             assertEquals(fakeToday, p.dateTime());
             return true;
         }));
+    }
+
+    @Test
+    void throwsExceptionForInappropriateLanguageInPostText() {
+        String postTextWithInappropriateLanguage = "I like orange juice !";
+        SubmitPostUseCase.InappropriateLanguageException thrownException = assertThrows(
+            SubmitPostUseCase.InappropriateLanguageException.class,
+            () -> usecase.run(registeredUser.uuid(), postTextWithInappropriateLanguage)
+        );
+
+        assertEquals("Post text contains inappropriate language: I like orange juice !", thrownException.getMessage());
     }
 
     @Test

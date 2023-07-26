@@ -97,6 +97,23 @@ public class TimelineRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest
     }
 
     @Test
+    void cannotSubmitPostWithInappropriateLanguage() throws IOException, InterruptedException {
+        String existingUserId = registerAUser();
+        HttpRequest request = requestBuilderFor("/users/" + existingUserId + "/timeline")
+            .POST(bodyFor(Map.of(
+                "text", "The word 'orange' is a forbidden word !"
+            )))
+            .build();
+
+        HttpResponse<String> response = send(request);
+
+        assertEquals(400, response.statusCode());
+        assertContentType("text/plain;charset=utf-8", response);
+        assertEquals("Post contains inappropriate language.", response.body());
+    }
+
+
+    @Test
     void unexistingUserTimeline() throws IOException, InterruptedException {
         UUID unexistingUUID = UUID.randomUUID();
         HttpRequest request = requestBuilderFor("/users/" + unexistingUUID + "/timeline").GET().build();

@@ -21,10 +21,13 @@ public class SubmitPostUseCase {
         this.clock = clock;
     }
 
-    public Post run(UUID authorUserId, String postText) throws UserNotFoundException {
+    public Post run(UUID authorUserId, String postText) throws UserNotFoundException, InappropriateLanguageException {
         RegisteredUser user = userRepository.getUserById(authorUserId);
         if (user == null)
             throw new UserNotFoundException(authorUserId);
+
+        if(postText.contains("orange"))
+            throw new InappropriateLanguageException(postText);
 
         Post postToStore = new Post(
             UUID.randomUUID(),
@@ -34,5 +37,11 @@ public class SubmitPostUseCase {
         );
         postRepository.store(postToStore);
         return postToStore;
+    }
+
+    public static class InappropriateLanguageException extends Exception {
+        public InappropriateLanguageException(String postText) {
+            super("Post text contains inappropriate language: " + postText);
+        }
     }
 }

@@ -52,6 +52,8 @@ public class TimelineRoute extends BaseRoute {
             Post storedPost = usecase.run(authorUserId, postText);
 
             jsonResponse(SC_CREATED, serializePost(storedPost), response);
+        } catch (SubmitPostUseCase.InappropriateLanguageException e) {
+            textResponse(SC_BAD_REQUEST, "Post contains inappropriate language.", response);
         } catch (UserNotFoundException | IllegalArgumentException ex) {
             textResponse(SC_NOT_FOUND, "User not found.", response);
         }
