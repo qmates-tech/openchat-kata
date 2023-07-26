@@ -70,7 +70,10 @@ class SubmitPostUseCaseTest {
         "I like orange juice !",
         "Orange is my favorite fruit.",
         "I LOVE ORANGE !",
-        "I collected many oranges today."
+        "I collected many oranges today.",
+        "I saw an elephant in africa.",
+        "Elephants are so cute!",
+        "ELEPHANTS ARE GIANT !"
     })
     void throwsExceptionForInappropriateLanguageInPostText(String postText) {
         SubmitPostUseCase.InappropriateLanguageException thrownException = assertThrows(

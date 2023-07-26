@@ -7,9 +7,12 @@ import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.repository.PostRepository;
 import tech.qmates.openchat.domain.repository.UserRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 public class SubmitPostUseCase {
+
+    public static final List<String> FORBIDDEN_WORDS = List.of("orange", "elephant");
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
@@ -26,7 +29,7 @@ public class SubmitPostUseCase {
         if (user == null)
             throw new UserNotFoundException(authorUserId);
 
-        if(postText.toLowerCase().contains("orange"))
+        if(containsForbiddenWords(postText))
             throw new InappropriateLanguageException(postText);
 
         Post postToStore = new Post(
@@ -37,6 +40,11 @@ public class SubmitPostUseCase {
         );
         postRepository.store(postToStore);
         return postToStore;
+    }
+
+    private static boolean containsForbiddenWords(String postText) {
+        return FORBIDDEN_WORDS.stream()
+            .anyMatch((word) -> postText.toLowerCase().contains(word));
     }
 
     public static class InappropriateLanguageException extends Exception {
