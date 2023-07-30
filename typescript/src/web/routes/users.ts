@@ -3,11 +3,12 @@ import { RegisteredUser } from "../../domain/entities/User";
 import GetAllUsersUseCase from "../../domain/usecases/GetAllUsersUseCase";
 import RegisterUserUseCase, { UsernameAlreadyInUseError } from "../../domain/usecases/RegisterUserUseCase";
 import AppFactory from "../AppFactory";
-import { jsonResponseWith, ParsedRequest, Route, textResponse } from "../router";
+import WebRequest from "../WebRequest";
+import { Route, jsonResponseWith, textResponse } from "../router";
 
 export default {
 
-  handle: (request: ParsedRequest, response: ServerResponse): void => {
+  handle: (request: WebRequest, response: ServerResponse): void => {
     switch (request.method) {
       case 'GET': return getRequest(response)
       case 'POST': return postRequest(request, response)
@@ -17,7 +18,7 @@ export default {
     return
   },
 
-  shouldHandle: (r: ParsedRequest): boolean => {
+  shouldHandle: (r: WebRequest): boolean => {
     return r.url === '/users'
       && ['GET', 'POST'].includes(r.method)
   }
@@ -38,7 +39,7 @@ function getRequest(response: ServerResponse): void {
   jsonResponseWith(200, serializedUsers, response)
 }
 
-function postRequest(request: ParsedRequest, response: ServerResponse): void {
+function postRequest(request: WebRequest, response: ServerResponse): void {
   try {
     const username: string = request.requestBody.username
     const password: string = request.requestBody.password
@@ -58,5 +59,4 @@ function postRequest(request: ParsedRequest, response: ServerResponse): void {
 
     throw err
   }
-  return
 }

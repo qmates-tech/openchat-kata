@@ -1,8 +1,9 @@
 import { ServerResponse } from "http";
 import AppFactory from "../AppFactory";
-import { emptyResponse, ParsedRequest, textResponse } from "../router";
+import WebRequest from "../WebRequest";
+import { emptyResponse, textResponse } from "../router";
 
-function handle(request: ParsedRequest, response: ServerResponse): void {
+function handle(request: WebRequest, response: ServerResponse): void {
   if (request.method === 'DELETE') {
     AppFactory.resetRepositories()
     emptyResponse(200, response)
@@ -13,7 +14,7 @@ function handle(request: ParsedRequest, response: ServerResponse): void {
   return
 }
 
-function shouldHandle(r: ParsedRequest) {
+function shouldHandle(r: WebRequest) {
   return r.url === '/admin'
     && ['DELETE'].includes(r.method)
 }

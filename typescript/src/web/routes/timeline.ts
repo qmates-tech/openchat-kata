@@ -1,17 +1,18 @@
 import { ServerResponse } from "http";
 import Post from "../../domain/entities/Post";
-import SubmitPostUseCase from "../../domain/usecases/SubmitPostUseCase";
-import AppFactory from "../AppFactory";
-import { ParsedRequest, Route, jsonResponseWith, textResponse } from "../router";
 import GetTimelineUseCase from "../../domain/usecases/GetTimelineUseCase";
+import SubmitPostUseCase from "../../domain/usecases/SubmitPostUseCase";
 import { UserNotFoundError } from "../../domain/usecases/errors/UserNotFoundError";
+import AppFactory from "../AppFactory";
+import WebRequest from "../WebRequest";
+import { Route, jsonResponseWith, textResponse } from "../router";
 
-const routeRegExp = /^\/users\/(.+)\/timeline$/
+const ROUTE_REGEXP = /^\/users\/(.+)\/timeline$/
 
 export default {
 
-  handle: (request: ParsedRequest, response: ServerResponse): void => {
-    const matches = request.url.match(routeRegExp)!
+  handle: (request: WebRequest, response: ServerResponse): void => {
+    const matches = request.url.match(ROUTE_REGEXP)!
     const userIdParameter = matches[1]
 
     switch (request.method) {
@@ -23,8 +24,8 @@ export default {
     return
   },
 
-  shouldHandle: (r: ParsedRequest): boolean => {
-    return (r.url.match(routeRegExp) ?? false)
+  shouldHandle: (r: WebRequest): boolean => {
+    return (r.url.match(ROUTE_REGEXP) ?? false)
       && ['GET', 'POST'].includes(r.method)
   }
 
@@ -45,10 +46,9 @@ function getRequest(userId: string, response: ServerResponse): void {
 
     throw err
   }
-
 }
 
-function postRequest(userId: string, request: ParsedRequest, response: ServerResponse): void {
+function postRequest(userId: string, request: WebRequest, response: ServerResponse): void {
   const postText = request.requestBody.text
   const usecase = new SubmitPostUseCase(AppFactory.getPostRepository())
   const submittedPost: Post = usecase.run(userId, postText)
