@@ -17,18 +17,6 @@ describe('user timeline API route', () => {
     AcceptanceTestsUtil.resetApplication(httpClient)
   })
 
-  test('unexisting user timeline', async () => {
-    let response: AxiosResponse
-    try {
-      response = await httpClient.get('/users/unexisting/timeline')
-    } catch (error: any) {
-      response = error.response as AxiosResponse
-    }
-    expect(response.status).toBe(404)
-    expect(response.headers['content-type']).toBe('text/plain')
-    expect(response.data).toBe('User not found.')
-  })
-
   test('empty user timeline', async () => {
     const aliceUUID = await AcceptanceTestsUtil.registerUser("alice90", "any", "any", httpClient)
 
@@ -55,5 +43,50 @@ describe('user timeline API route', () => {
       dateTime: expect.toSatisfy(AcceptanceTestsUtil.hasExpectedIsoDatetimeFormat)
     })
   })
+
+  test('submit some posts and get timeline posts in descending order', async () => {
+    const aliceUUID = await AcceptanceTestsUtil.registerUser("alice90", "any", "any", httpClient)
+    const bobUUID = await AcceptanceTestsUtil.registerUser("bob89", "any", "any", httpClient)
+
+    // ========================================= submit some posts
+
+    const alicePostsIds = [
+      await AcceptanceTestsUtil.submitPost(aliceUUID, "Alice user, first post.", httpClient),
+      await AcceptanceTestsUtil.submitPost(aliceUUID, "Alice user, second post.", httpClient),
+      await AcceptanceTestsUtil.submitPost(aliceUUID, "Alice user, third post.", httpClient),
+    ]
+    const bobPostsIds = [
+      await AcceptanceTestsUtil.submitPost(bobUUID, "Bob user, first post.", httpClient),
+      await AcceptanceTestsUtil.submitPost(bobUUID, "Bob user, second post.", httpClient)
+    ]
+
+    // ========================================= check alice's timeline
+
+    const aliceTimeline: AxiosResponse = await httpClient.get(`/users/${aliceUUID}/timeline`)
+
+    expect(aliceTimeline.status).toBe(200)
+    expect(aliceTimeline.headers['content-type']).toBe('application/json')
+    // TODO complete
+
+    // ========================================= check bob's timeline
+
+    const bobTimeline: AxiosResponse = await httpClient.get(`/users/${aliceUUID}/timeline`)
+
+    expect(bobTimeline.status).toBe(200)
+    // TODO complete
+  })
+
+  test('unexisting user timeline', async () => {
+    let response: AxiosResponse
+    try {
+      response = await httpClient.get('/users/unexisting/timeline')
+    } catch (error: any) {
+      response = error.response as AxiosResponse
+    }
+    expect(response.status).toBe(404)
+    expect(response.headers['content-type']).toBe('text/plain')
+    expect(response.data).toBe('User not found.')
+  })
+
 
 })

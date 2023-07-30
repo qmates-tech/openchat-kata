@@ -17,6 +17,18 @@ export async function registerUser(
   return response.data.id as string
 }
 
+export async function submitPost(
+  userId: string,
+  postText: string,
+  httpClient: AxiosInstance
+): Promise<string> {
+    let response = await httpClient.post(`/users/${userId}/timeline`, {
+      "text": postText
+    })
+    expect(response.status).toBe(201)
+    return response.data.postId
+}
+
 export function isValidUUID4(value: string): boolean {
   return uuid.version(value) === 4
 }
