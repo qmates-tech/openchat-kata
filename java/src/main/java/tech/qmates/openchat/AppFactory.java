@@ -53,6 +53,8 @@ public class AppFactory {
     public static void resetRepositories() {
         if (userRepositoryInstance != null)
             userRepositoryInstance.reset();
+        if (postRepositoryInstance != null)
+            postRepositoryInstance.reset();
     }
 
     public static UTCClock getRealClock() {
