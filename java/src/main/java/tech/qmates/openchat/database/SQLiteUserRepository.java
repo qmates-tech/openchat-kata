@@ -53,13 +53,7 @@ public class SQLiteUserRepository extends SQLiteRepository implements UserReposi
         try (Connection connection = openConnection()) {
             Statement query = connection.createStatement();
             ResultSet resultSet = query.executeQuery("SELECT * FROM users");
-            return mapResultSet((ResultSet row) ->
-                    new RegisteredUser(
-                        UUID.fromString(row.getString("id")),
-                        row.getString("username"),
-                        row.getString("about")
-                    ),
-                resultSet);
+            return mapResultSet(this::registeredUserFrom, resultSet);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -73,11 +67,7 @@ public class SQLiteUserRepository extends SQLiteRepository implements UserReposi
             if (!resultSet.next())
                 return null;
 
-            return new RegisteredUser(
-                UUID.fromString(resultSet.getString("id")),
-                resultSet.getString("username"),
-                resultSet.getString("about")
-            );
+            return registeredUserFrom(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -90,6 +80,14 @@ public class SQLiteUserRepository extends SQLiteRepository implements UserReposi
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private RegisteredUser registeredUserFrom(ResultSet resultSet) throws SQLException {
+        return new RegisteredUser(
+            UUID.fromString(resultSet.getString("id")),
+            resultSet.getString("username"),
+            resultSet.getString("about")
+        );
     }
 
     private static String sha256Of(String password) {
