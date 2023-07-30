@@ -1,7 +1,7 @@
-import SQLitePostRepository from "../database/SQLitePostRepository";
-import SQLiteUserRepository from "../database/SQLiteUserRepository";
-import PostRepository from "../domain/repositories/PostRepository";
-import UserRepository from "../domain/repositories/UserRepository";
+import SQLitePostRepository from "./database/SQLitePostRepository";
+import SQLiteUserRepository from "./database/SQLiteUserRepository";
+import PostRepository from "./domain/repositories/PostRepository";
+import UserRepository from "./domain/repositories/UserRepository";
 
 export default class AppFactory {
 

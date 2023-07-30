@@ -1,5 +1,5 @@
 import { ServerResponse } from "http";
-import AppFactory from "../AppFactory";
+import AppFactory from "../../AppFactory";
 import WebRequest from "../WebRequest";
 import { emptyResponse, textResponse } from "../router";
 

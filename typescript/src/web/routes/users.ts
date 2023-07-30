@@ -1,8 +1,8 @@
 import { ServerResponse } from "http";
+import AppFactory from "../../AppFactory";
 import { RegisteredUser } from "../../domain/entities/User";
 import GetAllUsersUseCase from "../../domain/usecases/GetAllUsersUseCase";
 import RegisterUserUseCase, { UsernameAlreadyInUseError } from "../../domain/usecases/RegisterUserUseCase";
-import AppFactory from "../AppFactory";
 import WebRequest from "../WebRequest";
 import { Route, jsonResponseWith, textResponse } from "../router";
 
