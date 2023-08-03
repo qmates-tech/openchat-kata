@@ -30,7 +30,9 @@ export default class SQLitePostRepository implements PostRepository {
   }
 
   getAllByUser(userId: string): Post[] {
-    const result: any[] = this.db.prepare('SELECT * FROM posts').all()
+    const result: any[] = this.db
+      .prepare('SELECT * FROM posts WHERE userId = ?')
+      .all(userId)
 
     return result.map((p: any) => ({
       id: p.id,
