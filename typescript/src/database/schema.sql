@@ -6,3 +6,10 @@ CREATE TABLE users (
     password VARCHAR(200) NOT NULL,
     about VARCHAR(200) NULL
 );
+
+CREATE TABLE posts (
+    id VARCHAR(100) PRIMARY KEY NOT NULL,
+    userId VARCHAR(100) NOT NULL,
+    text text NOT NULL,
+    dateTime VARCHAR(100) NOT NULL
+);
