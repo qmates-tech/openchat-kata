@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TimelineRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest {
+class TimelineRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest {
 
     @Test
     void emptyUserTimeline() throws IOException, InterruptedException {

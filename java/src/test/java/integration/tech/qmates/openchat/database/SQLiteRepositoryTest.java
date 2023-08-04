@@ -3,7 +3,7 @@ package integration.tech.qmates.openchat.database;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public abstract class SQLiteRepositoryTest {
+abstract class SQLiteRepositoryTest {
 
     protected String getSqliteFilePath() {
         URL res = getClass().getClassLoader().getResource("integration.test.db");
