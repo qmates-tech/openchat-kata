@@ -111,7 +111,7 @@ public class SQLiteUserRepositoryTest extends SQLiteRepositoryTest {
         return query.executeQuery().getString("password");
     }
 
-    public UserToRegister newUserWith(String username) {
+    private UserToRegister newUserWith(String username) {
         return newUserWith(username, "any");
     }
 
@@ -119,7 +119,7 @@ public class SQLiteUserRepositoryTest extends SQLiteRepositoryTest {
         return newUserWith(username, password, "any");
     }
 
-    public UserToRegister newUserWith(String username, String password, String about) {
+    private UserToRegister newUserWith(String username, String password, String about) {
         return new UserToRegister(UUID.randomUUID(), username, password, about);
     }
 
