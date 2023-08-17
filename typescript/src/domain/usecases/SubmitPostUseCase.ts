@@ -12,12 +12,12 @@ export default class SubmitPostUseCase {
     this.userRepository = userRepository
   }
 
-  run(userId: string, postText: any): Post {
+  run(userId: string, postText: string): Post {
     const registeredUser = this.userRepository.getUserById(userId)
     if (!registeredUser)
       throw new UserNotFoundError(userId)
 
-    if(postText.includes("orange"))
+    if(postText.toLocaleLowerCase().includes("orange"))
       throw new InappropriateLanguageError(postText)
 
     const postToStore: Post = newPost(postText, userId)
@@ -29,7 +29,7 @@ export default class SubmitPostUseCase {
 
 export class InappropriateLanguageError extends Error {
   constructor(postText: string) {
-    super(`Post text contains inappropriate language: ${postText}`)
+    super("Post text contains inappropriate language: " + postText)
     Object.setPrototypeOf(this, InappropriateLanguageError.prototype);
   }
 }

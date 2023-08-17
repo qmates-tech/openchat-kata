@@ -53,11 +53,15 @@ describe('SubmitPostUseCase', () => {
     }).toThrowWithMessage(UserNotFoundError, 'User with uuid [293307a4-86cd-49a8-ac5f-9347a3276e75] not found!')
   })
 
-  test('throws exception for inappropriated language in post text', () => {
+  it.each([
+    "I like orange juice !",
+    "Orange is my favorite fruit.",
+    "I LOVE ORANGE !",
+  ])('throws exception for inappropriated language in post text: %p', (postText: string) => {
     expect(() => {
-      usecase.run(registeredUser.id, "I like orange juice !")
+      usecase.run(registeredUser.id, postText)
     }).toThrowWithMessage(InappropriateLanguageError,
-      'Post text contains inappropriate language: I like orange juice !'
+      'Post text contains inappropriate language: ' + postText
     )
   })
 

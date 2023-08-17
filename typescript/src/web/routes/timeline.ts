@@ -53,7 +53,7 @@ function getRequest(userId: string, response: ServerResponse): void {
 }
 
 function postRequest(userId: string, request: WebRequest, response: ServerResponse): void {
-  const postText = request.requestBody.text
+  const postText: string = request.requestBody.text
 
   const usecase = AppFactory.buildSubmitPostUseCase()
   const submittedPost: Post = usecase.run(userId, postText)
