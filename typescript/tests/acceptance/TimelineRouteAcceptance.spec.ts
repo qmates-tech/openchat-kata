@@ -27,7 +27,7 @@ describe('user timeline API route', () => {
     expect(response.data).toStrictEqual([])
   })
 
-  test('user publish a post', async () => {
+  test('registered user submit a post', async () => {
     const aliceUUID = await AcceptanceTestsUtil.registerUser("alice90", "any", "any", httpClient)
 
     let response = await httpClient.post(`/users/${aliceUUID}/timeline`, {
@@ -89,6 +89,22 @@ describe('user timeline API route', () => {
     expect(bobTimeline.data).toSatisfyAll((p) => AcceptanceTestsUtil.hasExpectedIsoDatetimeFormat(p.dateTime))
   })
 
+  // WIP language moderation
+  xtest('cannot submit post with inappropriate language', async () => {
+    const aliceUUID = await AcceptanceTestsUtil.registerUser("alice90", "any", "any", httpClient)
+    let response: AxiosResponse
+    try {
+      response = await httpClient.post(`/users/${aliceUUID}/timeline`, {
+        "text": "The word 'elephant' is a forbidden word !"
+      })
+    } catch (error: any) {
+      response = error.response as AxiosResponse
+    }
+    expect(response.status).toBe(400)
+    expect(response.headers['content-type']).toBe('text/plain')
+    expect(response.data).toBe('Post contains inappropriate language.')
+  })
+
   test('unexisting user timeline', async () => {
     let response: AxiosResponse
     try {
@@ -100,6 +116,5 @@ describe('user timeline API route', () => {
     expect(response.headers['content-type']).toBe('text/plain')
     expect(response.data).toBe('User not found.')
   })
-
 
 })

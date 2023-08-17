@@ -4,7 +4,7 @@ import * as uuid from 'uuid';
 import Post from '../../../../src/domain/entities/Post';
 import PostRepository from '../../../../src/domain/repositories/PostRepository';
 import UserRepository from '../../../../src/domain/repositories/UserRepository';
-import SubmitPostUseCase from "../../../../src/domain/usecases/SubmitPostUseCase";
+import SubmitPostUseCase, { InappropriateLanguageError } from "../../../../src/domain/usecases/SubmitPostUseCase";
 import { RegisteredUser } from '../../../../src/domain/entities/User';
 import UserNotFoundError from '../../../../src/domain/usecases/errors/UserNotFoundError';
 
@@ -36,7 +36,7 @@ describe('SubmitPostUseCase', () => {
     expect(stored.dateTime).toBeBefore(new Date())
   })
 
-  test('storeThePostInRepository', () => {
+  test('store the post in repository', () => {
     usecase.run(registeredUser.id, "Post text.")
 
     expect(postRepository.store).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({
@@ -47,10 +47,18 @@ describe('SubmitPostUseCase', () => {
     }))
   })
 
-  test('throwsExceptionForUnexistingUser', () => {
+  test('throws exception for unexisting user', () => {
     expect(() => {
       usecase.run("293307a4-86cd-49a8-ac5f-9347a3276e75", "any")
     }).toThrowWithMessage(UserNotFoundError, 'User with uuid [293307a4-86cd-49a8-ac5f-9347a3276e75] not found!')
+  })
+
+  test('throws exception for inappropriated language in post text', () => {
+    expect(() => {
+      usecase.run(registeredUser.id, "I like orange juice !")
+    }).toThrowWithMessage(InappropriateLanguageError,
+      'Post text contains inappropriate language: I like orange juice !'
+    )
   })
 
 })

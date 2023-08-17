@@ -17,9 +17,19 @@ export default class SubmitPostUseCase {
     if (!registeredUser)
       throw new UserNotFoundError(userId)
 
+    if(postText.includes("orange"))
+      throw new InappropriateLanguageError(postText)
+
     const postToStore: Post = newPost(postText, userId)
     this.postRepository.store(postToStore)
     return postToStore
   }
 
+}
+
+export class InappropriateLanguageError extends Error {
+  constructor(postText: string) {
+    super(`Post text contains inappropriate language: ${postText}`)
+    Object.setPrototypeOf(this, InappropriateLanguageError.prototype);
+  }
 }
