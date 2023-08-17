@@ -39,7 +39,16 @@ function getRequest(userId: string, response: ServerResponse): void {
     )
 
     const posts: Post[] = usecase.run(userId)
-    jsonResponseWith(200, posts, response)
+
+    const serializedPosts = posts.map((p: Post) => {
+      return {
+        "postId": p.id,
+        "userId": p.userId,
+        "text": p.text,
+        "dateTime": serializeDatetime(p.dateTime)
+      }
+    })
+    jsonResponseWith(200, serializedPosts, response)
   } catch (err: any) {
     if (err instanceof UserNotFoundError)
       return textResponse(404, 'User not found.', response)

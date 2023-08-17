@@ -66,14 +66,27 @@ describe('user timeline API route', () => {
 
     expect(aliceTimeline.status).toBe(200)
     expect(aliceTimeline.headers['content-type']).toBe('application/json')
-    // TODO complete
+    expect(aliceTimeline.data).toHaveLength(3)
+    expect(aliceTimeline.data[0].postId).toBe(alicePostsIds[2])
+    expect(aliceTimeline.data[1].postId).toBe(alicePostsIds[1])
+    expect(aliceTimeline.data[2].postId).toBe(alicePostsIds[0])
+    expect(aliceTimeline.data).toSatisfyAll((p) => p.userId == aliceUUID)
+    expect(aliceTimeline.data[0].text).toBe("Alice user, third post.")
+    expect(aliceTimeline.data[1].text).toBe("Alice user, second post.")
+    expect(aliceTimeline.data[2].text).toBe("Alice user, first post.")
+    expect(aliceTimeline.data).toSatisfyAll((p) => AcceptanceTestsUtil.hasExpectedIsoDatetimeFormat(p.dateTime))
 
     // ========================================= check bob's timeline
 
-    const bobTimeline: AxiosResponse = await httpClient.get(`/users/${aliceUUID}/timeline`)
+    const bobTimeline: AxiosResponse = await httpClient.get(`/users/${bobUUID}/timeline`)
 
     expect(bobTimeline.status).toBe(200)
-    // TODO complete
+    expect(bobTimeline.data).toHaveLength(2)
+    expect(bobTimeline.data[0].postId).toBe(bobPostsIds[1])
+    expect(bobTimeline.data[1].postId).toBe(bobPostsIds[0])
+    expect(bobTimeline.data).toSatisfyAll((p) => p.userId == bobUUID)
+    expect(bobTimeline.data[0].text).toBe("Bob user, second post.")
+    expect(bobTimeline.data).toSatisfyAll((p) => AcceptanceTestsUtil.hasExpectedIsoDatetimeFormat(p.dateTime))
   })
 
   test('unexisting user timeline', async () => {
