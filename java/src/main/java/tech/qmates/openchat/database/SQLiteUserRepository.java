@@ -2,6 +2,7 @@ package tech.qmates.openchat.database;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
+import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
 import tech.qmates.openchat.domain.entity.RegisteredUser;
 import tech.qmates.openchat.domain.entity.UserToRegister;
@@ -29,7 +30,7 @@ public class SQLiteUserRepository extends SQLiteRepository implements UserReposi
             query.setString(4, user.about());
             query.executeUpdate();
         } catch (SQLiteException e) {
-            if (e.getMessage().startsWith("[SQLITE_CONSTRAINT_PRIMARYKEY]"))
+            if (e.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_PRIMARYKEY)
                 throw new RuntimeException("Cannot store user, uuid value already used.", e);
         } catch (SQLException e) {
             throw new RuntimeException(e);

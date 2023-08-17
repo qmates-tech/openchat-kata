@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -56,6 +57,12 @@ class SQLitePostRepositoryTest extends SQLiteRepositoryTest {
         assertThat(firstUserPosts).allSatisfy(p -> assertEquals(firstUserId, p.userId()));
         assertThat(secondUserPosts).hasSize(2);
         assertThat(secondUserPosts).allSatisfy(p -> assertEquals(secondUserId, p.userId()));
+    }
+
+    @Test
+    void allPostsOfUnexistingUserIdIsAnEmptyList() {
+        Set<Post> posts = repository.getAllByUser(UUID.randomUUID());
+        assertEquals(Collections.emptySet(), posts);
     }
 
     @Test
