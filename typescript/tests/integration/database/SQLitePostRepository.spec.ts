@@ -1,4 +1,3 @@
-import Database from 'better-sqlite3';
 import 'jest-extended';
 import * as uuid from 'uuid';
 import SQLitePostRepository from "../../../src/database/SQLitePostRepository";
