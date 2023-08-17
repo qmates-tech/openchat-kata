@@ -1,4 +1,3 @@
-
 import Post from "../entities/Post";
 import PostRepository from "../repositories/PostRepository";
 import UserRepository from "../repositories/UserRepository";
@@ -14,10 +13,12 @@ export default class GetTimelineUseCase {
   }
 
   run(userId: string): Post[] {
-    if (userId === "unexisting")
+    const registeredUser = this.userRepository.getUserById(userId)
+    if (!registeredUser)
       throw new UserNotFoundError(userId)
 
-    return []
+    const usersPosts =  this.postRepository.getAllByUser(userId)
+    return usersPosts.sort((a, b) => b.dateTime.getTime() - a.dateTime.getTime())
   }
 
 }
