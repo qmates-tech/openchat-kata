@@ -89,8 +89,7 @@ describe('user timeline API route', () => {
     expect(bobTimeline.data).toSatisfyAll((p) => AcceptanceTestsUtil.hasExpectedIsoDatetimeFormat(p.dateTime))
   })
 
-  // WIP language moderation
-  xtest('cannot submit post with inappropriate language', async () => {
+  test('cannot submit post with inappropriate language', async () => {
     const aliceUUID = await AcceptanceTestsUtil.registerUser("alice90", "any", "any", httpClient)
     let response: AxiosResponse
     try {
