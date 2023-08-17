@@ -50,7 +50,11 @@ function getRequest(userId: string, response: ServerResponse): void {
 
 function postRequest(userId: string, request: WebRequest, response: ServerResponse): void {
   const postText = request.requestBody.text
-  const usecase = new SubmitPostUseCase(AppFactory.getPostRepository())
+
+  const usecase = new SubmitPostUseCase(
+    AppFactory.getPostRepository(),
+    AppFactory.getUserRepository()
+  )
   const submittedPost: Post = usecase.run(userId, postText)
 
   jsonResponseWith(201, {
