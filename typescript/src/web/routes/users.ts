@@ -1,8 +1,7 @@
 import { ServerResponse } from "http";
 import AppFactory from "../../AppFactory";
 import { RegisteredUser } from "../../domain/entities/User";
-import GetAllUsersUseCase from "../../domain/usecases/GetAllUsersUseCase";
-import RegisterUserUseCase, { UsernameAlreadyInUseError } from "../../domain/usecases/RegisterUserUseCase";
+import { UsernameAlreadyInUseError } from "../../domain/usecases/RegisterUserUseCase";
 import WebRequest from "../WebRequest";
 import { Route, jsonResponseWith, textResponse } from "../router";
 
@@ -26,8 +25,7 @@ export default {
 } as Route
 
 function getRequest(response: ServerResponse): void {
-  const usecase = new GetAllUsersUseCase(AppFactory.getUserRepository())
-
+  const usecase = AppFactory.buildGetAllUsersUseCase()
   const users: RegisteredUser[] = usecase.run()
 
   jsonResponseWith(200,
@@ -47,7 +45,7 @@ function postRequest(request: WebRequest, response: ServerResponse): void {
     const password: string = request.requestBody.password
     const userAbout: string = request.requestBody.about
 
-    const usecase = new RegisterUserUseCase(AppFactory.getUserRepository())
+    const usecase = AppFactory.buildRegisterUserUseCase()
     const storedUserUUID: string = usecase.run(username, password, userAbout)
 
     jsonResponseWith(201, {

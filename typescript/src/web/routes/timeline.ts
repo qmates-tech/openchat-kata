@@ -1,8 +1,6 @@
 import { ServerResponse } from "http";
 import AppFactory from "../../AppFactory";
 import Post from "../../domain/entities/Post";
-import GetTimelineUseCase from "../../domain/usecases/GetTimelineUseCase";
-import SubmitPostUseCase from "../../domain/usecases/SubmitPostUseCase";
 import UserNotFoundError from "../../domain/usecases/errors/UserNotFoundError";
 import WebRequest from "../WebRequest";
 import { Route, jsonResponseWith, textResponse } from "../router";
@@ -33,11 +31,7 @@ export default {
 
 function getRequest(userId: string, response: ServerResponse): void {
   try {
-    const usecase = new GetTimelineUseCase(
-      AppFactory.getPostRepository(),
-      AppFactory.getUserRepository()
-    )
-
+    const usecase = AppFactory.buildGetTimelineUseCase()
     const posts: Post[] = usecase.run(userId)
 
     jsonResponseWith(200,
@@ -61,10 +55,7 @@ function getRequest(userId: string, response: ServerResponse): void {
 function postRequest(userId: string, request: WebRequest, response: ServerResponse): void {
   const postText = request.requestBody.text
 
-  const usecase = new SubmitPostUseCase(
-    AppFactory.getPostRepository(),
-    AppFactory.getUserRepository()
-  )
+  const usecase = AppFactory.buildSubmitPostUseCase()
   const submittedPost: Post = usecase.run(userId, postText)
 
   jsonResponseWith(201, {
