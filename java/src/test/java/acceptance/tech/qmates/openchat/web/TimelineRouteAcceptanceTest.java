@@ -112,7 +112,6 @@ class TimelineRouteAcceptanceTest extends BaseOpenChatRouteAcceptanceTest {
         assertEquals("Post contains inappropriate language.", response.body());
     }
 
-
     @Test
     void unexistingUserTimeline() throws IOException, InterruptedException {
         UUID unexistingUUID = UUID.randomUUID();
