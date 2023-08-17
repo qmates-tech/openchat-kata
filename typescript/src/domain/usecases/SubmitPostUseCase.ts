@@ -17,7 +17,7 @@ export default class SubmitPostUseCase {
     if (!registeredUser)
       throw new UserNotFoundError(userId)
 
-    if(postText.toLocaleLowerCase().includes("orange"))
+    if (this.containsInappropriateLanguage(postText))
       throw new InappropriateLanguageError(postText)
 
     const postToStore: Post = newPost(postText, userId)
@@ -25,6 +25,11 @@ export default class SubmitPostUseCase {
     return postToStore
   }
 
+
+  private containsInappropriateLanguage(postText: string) {
+    const forbidden = ["orange", "elephant", "ice cream"]
+    return forbidden.some((word: string) => postText.toLocaleLowerCase().includes(word))
+  }
 }
 
 export class InappropriateLanguageError extends Error {
