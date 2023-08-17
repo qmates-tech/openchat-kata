@@ -27,16 +27,18 @@ export default {
 
 function getRequest(response: ServerResponse): void {
   const usecase = new GetAllUsersUseCase(AppFactory.getUserRepository())
+
   const users: RegisteredUser[] = usecase.run()
 
-  const serializedUsers = users.map((u: RegisteredUser) => {
-    return {
-      id: u.id,
-      username: u.username,
-      about: u.about
-    }
-  })
-  jsonResponseWith(200, serializedUsers, response)
+  jsonResponseWith(200,
+    users.map((u: RegisteredUser) => {
+      return {
+        "id": u.id,
+        "username": u.username,
+        "about": u.about
+      }
+    }),
+    response)
 }
 
 function postRequest(request: WebRequest, response: ServerResponse): void {
