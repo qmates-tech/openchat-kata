@@ -1,4 +1,5 @@
 import Database from 'better-sqlite3';
+import * as uuid from 'uuid';
 import Post from '../domain/entities/Post';
 import PostRepository from "../domain/repositories/PostRepository";
 
@@ -11,6 +12,9 @@ export default class SQLitePostRepository implements PostRepository {
   }
 
   store(post: Post): void {
+    if (!uuid.validate(post.id) || uuid.version(post.id) != 4)
+      throw new Error('Cannot store post, invalid v4 uuid id value.')
+
     let result: Database.RunResult;
     try {
       result = this.db
@@ -22,6 +26,9 @@ export default class SQLitePostRepository implements PostRepository {
           post.dateTime.toISOString()
         )
     } catch (err: any) {
+      if (err.name === 'SqliteError' && err.code === 'SQLITE_CONSTRAINT_PRIMARYKEY')
+        throw Error('Cannot store post, uuid value already used.')
+
       throw err
     }
 

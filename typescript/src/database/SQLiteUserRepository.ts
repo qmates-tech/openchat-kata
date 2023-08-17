@@ -1,4 +1,4 @@
-import Database, { SqliteError } from 'better-sqlite3';
+import Database from 'better-sqlite3';
 import crypto from 'crypto';
 import * as uuid from 'uuid';
 import { RegisteredUser, UserToRegister } from "../domain/entities/User";
@@ -27,7 +27,7 @@ export default class SQLiteUserRepository implements UserRepository {
           user.about
         )
     } catch (err: any) {
-      if (err instanceof SqliteError && err.message === 'UNIQUE constraint failed: users.id')
+      if (err.name === 'SqliteError' && err.code === 'SQLITE_CONSTRAINT_PRIMARYKEY')
         throw Error('Cannot store user, uuid value already used.')
 
       throw err
