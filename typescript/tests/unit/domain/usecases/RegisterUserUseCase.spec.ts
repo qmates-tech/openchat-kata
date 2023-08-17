@@ -18,8 +18,7 @@ describe('RegisterUserUseCase', () => {
 
     usecase.run("alice90", "pass123", "About alice.")
 
-    expect(userRepository.store).toHaveBeenCalledTimes(1)
-    expect(userRepository.store).toHaveBeenCalledWith(expect.objectContaining({
+    expect(userRepository.store).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({
       id: expect.toSatisfy((v: string) => uuid.version(v) === 4),
       username: "alice90",
       password: "pass123",
