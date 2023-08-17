@@ -3,7 +3,7 @@ import AppFactory from "../../AppFactory";
 import Post from "../../domain/entities/Post";
 import GetTimelineUseCase from "../../domain/usecases/GetTimelineUseCase";
 import SubmitPostUseCase from "../../domain/usecases/SubmitPostUseCase";
-import { UserNotFoundError } from "../../domain/usecases/errors/UserNotFoundError";
+import UserNotFoundError from "../../domain/usecases/errors/UserNotFoundError";
 import WebRequest from "../WebRequest";
 import { Route, jsonResponseWith, textResponse } from "../router";
 

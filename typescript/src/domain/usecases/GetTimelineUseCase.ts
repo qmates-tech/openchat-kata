@@ -2,7 +2,7 @@
 import Post from "../entities/Post";
 import PostRepository from "../repositories/PostRepository";
 import UserRepository from "../repositories/UserRepository";
-import { UserNotFoundError } from "./errors/UserNotFoundError";
+import UserNotFoundError from "./errors/UserNotFoundError";
 
 export default class GetTimelineUseCase {
   private postRepository: PostRepository;
