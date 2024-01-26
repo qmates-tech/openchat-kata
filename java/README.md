@@ -1,7 +1,7 @@
 # Open Chat Backend Kata in Java
 Requirements:
 
-- `openjdk-18.0.2` or later
+- `openjdk-18.0.2` or newer
 
 > or just `docker` in alternative, see "Docker way" at the end
 
@@ -17,7 +17,7 @@ visit `http://localhost:8000`
 
 ### Create sqlite databases:
 
-To create ready-to-use sqlite db files, use `createdb` node script:
+To create ready-to-use sqlite db files, use the dedicated gradle tasks:
 
 ```
 $ ./gradlew createProductionDb createTestDb
@@ -66,11 +66,3 @@ To open a new bash session in the same temporary container:
 ```
 $ docker exec -it openchat-backend bash
 ```
-
-## TODO
-
-- [x] move unit tests under a unit folder (?) -> and integration as well
-- [x] commands to run only unit, integrations, acceptance + readme
-- [x] docker way readme instructions
-- [x] store password as sha256 in db
-- [ ] let flyway print out executed migrations
