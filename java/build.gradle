@@ -44,5 +44,5 @@ tasks.register('createTestDb', FlywayMigrateTask) {
     url = "jdbc:sqlite:${project.projectDir}/src/test/resources/integration.test.db"
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
