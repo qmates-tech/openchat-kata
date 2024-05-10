@@ -1,24 +1,19 @@
 # Open Chat Backend Kata
 
-Develop a REST API for the Open Chat project following API specification in `APIs.yaml`.
+Develop a backend API for the Open Chat project following API specification in `APIs.yaml`.
 
 ![](APIs.png)
 
--> [see API specification online](https://editor.swagger.io/?url=https://raw.githubusercontent.com/qmates-tech/openchat-kata/master/APIs.yaml)
-
+-> [browse API specification online](https://editor.swagger.io/?url=https://raw.githubusercontent.com/qmates-tech/openchat-kata/master/APIs.yaml)
 
 ## About this Kata
 
-This Kata is used by Robert C. Martin and Sandro Mancuso in "London vs. Chicago" cleancoders serie:
+This is part of a backend + frontend kata, check here the frontend part: [qmates-tech/openchat-kata-webclient](https://github.com/qmates-tech/openchat-kata-webclient)
 
-* https://cleancoders.com/episode/comparativeDesign-episode-1
-* https://github.com/sandromancuso/cleancoders_openchat/tree/starting-point
+The original idea of the kata is from Robert C. Martin and Sandro Mancuso in "London vs. Chicago" cleancoders serie:
+
+* [Comparative Case Study // London vs. Chicago - cleancoders.com](https://cleancoders.com/episode/comparativeDesign-episode-1)
+* [London vs. Chicago // Introduction - Youtube](https://www.youtube.com/watch?v=v68osKXat90)
+* https://github.com/sandromancuso/cleancoders_openchat
 * https://github.com/sandromancuso/cleancoders_openchat_webclient
 
-## Dev notes
-
-To run chrome disabling CORS security check and test the application with cleancoders_openchat_webclient:
-
-```
-$ google-chrome-stable --disable-web-security --incognito --user-data-dir /tmp/ http://localhost:5000
-```
